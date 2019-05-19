@@ -85,7 +85,6 @@ public class EstadaDAO {
 				est = new Estada();
 				v = new Veiculo();
 				v.setPlaca(idSTR);
-				System.out.println("Data Entrada:" + LocalDateTime.parse(buffer_entrada.readLine()));
 				est.setDataEntrada(LocalDateTime.parse(buffer_entrada.readLine()));
 				est.setDataSaida(LocalDateTime.parse(buffer_entrada.readLine()));
 				est.setHoraEntrada(LocalTime.parse(buffer_entrada.readLine()));
@@ -99,7 +98,7 @@ public class EstadaDAO {
 				
 			}
 		} catch (Exception e) {
-			System.out.println("ERRO ao ler os Bens de Consumo do disco rígido!");
+			System.out.println("ERRO ao ler as Estadas do disco rígido!");
 			e.printStackTrace();
 		}
 		return ests;
@@ -108,9 +107,10 @@ public class EstadaDAO {
 	// @Override
 	public void update(Estada est) {
 		List<Estada> ests = getAll();
-		int index = ests.indexOf(est);
-		if (index != -1) {
-			ests.set(index, est);
+		int numEstada = Estada.getNumEstada();
+
+		if (numEstada != -1) {
+			ests.set(numEstada, est);
 		}
 		saveToFile(ests);
 	}
@@ -118,9 +118,10 @@ public class EstadaDAO {
 	// @Override
 	public void delete(Estada est) {
 		List<Estada> ests = getAll();
-		int index = ests.indexOf(est);
-		if (index != -1) {
-			ests.remove(index);
+		int numEstada = Estada.getNumEstada();
+
+		if (numEstada != -1) {
+			ests.remove(numEstada);
 		}
 		saveToFile(ests);
 	}

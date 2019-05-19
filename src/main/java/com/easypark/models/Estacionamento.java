@@ -112,8 +112,9 @@ public class Estacionamento {
 		LocalDateTime dataEntrada = LocalDateTime.parse(strDataEntrada, formatter);
 		
 		LocalTime horaEntrada = LocalTime.now();
-		
-		Estada novaEstada = new Estada(dataEntrada, horaEntrada, veiculo);
+				
+    	Estada novaEstada = new Estada(dataEntrada, LocalDateTime.MIN, 
+    			horaEntrada, LocalTime.MIN, veiculo, LocalTime.MIN,  0.0, this.estadaList.size()); 
 
 		this.getEstadaList().put(veiculo.getPlaca(), novaEstada);
 

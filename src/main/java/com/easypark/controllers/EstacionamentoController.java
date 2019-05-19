@@ -24,24 +24,20 @@ import com.easypark.models.*;
 @Controller
 public class EstacionamentoController {
 	
-	
-	
-	
 	Estacionamento estacionamentoModel = new Estacionamento();
 	EstadaDAO estadaDAO = new EstadaDAO();
-	
-	
-	
+
 	public static void criaArquivo() {
 		File f = new File("estada.txt");
 		if (f.exists())
 			f.delete();
 	}
 	
-	
 	@RequestMapping("/index")
 	public String paginaInicial() {
-		estadaDAO.delete(EstadaDAO.get("XXX666"));
+		Estada estadaAux = estacionamentoModel.getEstadaVeiculo("3");
+		estadaAux.setValorEstada(28.0);
+		estadaDAO.update(estadaAux);
 		
 		return "index";
 	}
@@ -98,24 +94,17 @@ public class EstacionamentoController {
     	modelAndView.addObject("placaVeiculo",placaN);
     	modelAndView.addObject("tipoVeiculo",tipoVeiculoN);
     	modelAndView.addObject("dataEntrada",dataEntradaN.format(formatter));
+    	 	
     	
-    	Estada nova = new Estada(dataEntradaN, LocalDateTime.MIN, 
-    			estacionamentoModel.getEstadaList().get(placaN).getHoraEntrada(), LocalTime.MIN, veiculo, LocalTime.MIN,  0.0);  	
+    	EstadaDAO.add((Estada)informacoesEstada.get("novaEstada"));
 
-    	EstadaDAO.add(nova);
+		List<Estada> estadas = estadaDAO.getAll();
+		
+		System.out.println(estadas);
     	
-//    	System.out.println("Retorno DAO.GET: "+ EstadaDAO.get(placaN));
-//    	System.out.println("Retorno padrão: " + estacionamentoModel.getEstadaList().get(placaN));
-    	
-    	
-    	
-    	Map<String, Estada> newMap = estacionamentoModel.getEstadaList();
     	return modelAndView;
     }
-    
-    
-    
-    
+
     @GetMapping("/saidaVeiculo")
     public String saidaForm(Model model) {
         model.addAttribute("veiculo", new Veiculo());
@@ -144,7 +133,12 @@ public class EstacionamentoController {
     	estadaVeiculo.calculaValor(horasPermanecidas, minutosPermanecidos, valorHora);
     	
     	modelAndView.addObject("valorAPagar", estadaVeiculo.getValorEstada());
- 
+    	
+    	estadaVeiculo.setValorEstada(24.0);
+    	estadaDAO.update(estadaVeiculo);
+    	
+    	//estadaDAO.delete(EstadaDAO.get(placaVeiculoSaindo));
+    	
     	return modelAndView;	
     }
     

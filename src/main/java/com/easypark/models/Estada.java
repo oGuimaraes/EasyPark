@@ -8,6 +8,7 @@ import java.util.Map;
 
 public class Estada {
 
+	private static int numEstada = 0;
     private LocalDateTime dataEntrada;
     private LocalDateTime dataSaida;
     private LocalTime horaEntrada;
@@ -24,7 +25,7 @@ public class Estada {
     
     
     public Estada(LocalDateTime dataEntrada, LocalDateTime dataSaida, LocalTime horaEntrada, LocalTime horaSaida,
-			Veiculo veiculo, LocalTime tempoDePermanencia, Double valorEstada) {
+			Veiculo veiculo, LocalTime tempoDePermanencia, Double valorEstada, int sizeEstada) {
 		this.dataEntrada = dataEntrada;
 		this.dataSaida = dataSaida;
 		this.horaEntrada = horaEntrada;
@@ -32,10 +33,22 @@ public class Estada {
 		this.veiculo = veiculo;
 		this.tempoDePermanencia = tempoDePermanencia;
 		this.valorEstada = valorEstada;
+		this.numEstada = sizeEstada;
 	}
 
 	public Estada() {
 	}
+	
+
+	public static int getNumEstada() {
+		return numEstada;
+	}
+
+
+	public static void setNumEstada(int numEstada) {
+		Estada.numEstada = numEstada;
+	}
+
 
 	public Map<String, Object> saidaVeiculo(Estacionamento estacionamento, String placa) {
     	Map<String, Object> infoSaidaVeiculo = new HashMap<>();
@@ -155,7 +168,15 @@ public class Estada {
         this.dataEntrada = dataEntrada;
     }
 
-    public LocalDateTime getDataSaida() {
+    @Override
+	public String toString() {
+		return "Estada " + numEstada + "[dataEntrada=" + dataEntrada +  ", dataSaida=" + dataSaida + ", horaEntrada=" + horaEntrada
+				+ ", horaSaida=" + horaSaida + ", veiculo=" + veiculo + ", tempoDePermanencia=" + tempoDePermanencia
+				+ ", valorEstada=" + valorEstada + "]";
+	}
+
+
+	public LocalDateTime getDataSaida() {
         return dataSaida;
     }
 
@@ -163,13 +184,5 @@ public class Estada {
         this.dataSaida = dataSaida;
     }
 
-	@Override
-	public String toString() {
-		return "Estada [dataEntrada=" + dataEntrada + ", dataSaida=" + dataSaida + ", horaEntrada=" + horaEntrada
-				+ ", horaSaida=" + horaSaida + ", veiculo=" + veiculo + ", tempoDePermanencia=" + tempoDePermanencia
-				+ "valorEstada=" + valorEstada;
-	}
-    
-    
 
 }
