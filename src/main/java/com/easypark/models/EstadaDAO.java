@@ -118,12 +118,25 @@ public class EstadaDAO implements SystemDAO<Estada, String> {
 	public void delete(Estada est) {
 		List<Estada> ests = getAll();
 		int numEstada = Estada.getNumEstada()-1;
+		System.out.println("nº estada: " + numEstada);
 
 		if (numEstada != -1) {
 			ests.remove(numEstada);
 		}
 		saveToFile(ests);
 	}
+	
+//	@Override
+//	public void delete(Estada est) {
+//		List<Estada> estadaList = getAll();
+//		
+//		System.out.println("Qual Veiculo? " + est);
+//		estadaList.remove(est);
+//		System.out.println("Lista: " + estadaList);
+//
+//		saveToFile(estadaList);
+//	}
+//	
 
 	private void saveToFile(List<Estada> ests) {
 		try (BufferedWriter buffer_saida = new BufferedWriter(new FileWriter("estada.txt", false))) {

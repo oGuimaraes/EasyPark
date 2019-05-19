@@ -7,6 +7,4 @@ public interface SystemDAO<T, K> {
 	public void update(T p);
 	public void delete(T p);
 	public List<T> getAll();
-
-
 }

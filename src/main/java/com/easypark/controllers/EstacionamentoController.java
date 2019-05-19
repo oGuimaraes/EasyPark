@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.List;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -25,21 +26,26 @@ import com.easypark.models.*;
 @Controller
 public class EstacionamentoController {
 
-	Estacionamento estacionamentoModel = new Estacionamento();
-	EstadaDAO estadaDAO = new EstadaDAO();
+	private Estacionamento estacionamentoModel = new Estacionamento();
+
+	private EstadaDAO estadaDAO = new EstadaDAO();
+	private EstacionamentoDAO estacionamentoDAO = new EstacionamentoDAO();
 
 	public static void criaArquivo() {
 		File f = new File("estada.txt");
 		if (f.exists())
 			f.delete();
+		File x = new File("estacionamento.txt");
+		if (x.exists())
+			x.delete();
 	}
 
 	@RequestMapping("/index")
 	public String paginaInicial() {
-		Estada estadaAux = estacionamentoModel.getEstadaVeiculo("3");
-		estadaAux.setValorEstada(28.0);
-		estadaDAO.update(estadaAux);
-
+		
+		estacionamentoModel.setNomeEstabelecimento("LINDO");
+		estacionamentoDAO.update(estacionamentoModel);
+		System.out.println(estacionamentoModel.toString());
 		return "index";
 	}
 
@@ -49,14 +55,42 @@ public class EstacionamentoController {
 		return mv;
 	}
 
+//	public ModelAndView salvar(Estacionamento estabelecimento, RedirectAttributes attributes) {
+//	@RequestParam("placa") String placaVeiculoSaindo
+
 	@RequestMapping(value = "/cadastroEstabelecimento", method = RequestMethod.POST)
-	public ModelAndView salvar(Estacionamento estabelecimento, RedirectAttributes attributes) {
-		ModelAndView mv = new ModelAndView("redirect:/cadastroEstabelecimento");
+	public ModelAndView salvar(@RequestParam("nomeEstabelecimento") String nomeEstabelecimento,
+			@RequestParam("horaAbertura") String horaAbertura, @RequestParam("horaFechamento") String horaFechamento,
+			@RequestParam("quantidadeVagas") int quantidadeVagas, @RequestParam("valorHora") Double valorHora) {
+
+		estacionamentoModel.setNomeEstabelecimento(nomeEstabelecimento);
+		estacionamentoModel.setQuantidadeVagas(quantidadeVagas);
+		estacionamentoModel.setValorHora(valorHora);
+		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm");
+		LocalTime horaAberturaFormat = LocalTime.parse(horaAbertura, dtf);
+		LocalTime horaFechamentoFormat = LocalTime.parse(horaFechamento, dtf);
+		estacionamentoModel.setHoraAbertura(horaAberturaFormat);
+		estacionamentoModel.setHoraFechamento(horaFechamentoFormat);
+
+		ModelAndView mv = new ModelAndView("redirect:/cadastroEstabelecimento");		
 		criaArquivo();
-		estacionamentoModel = estabelecimento;
+		
+		estacionamentoDAO.add(estacionamentoModel);
 		System.out.println(estacionamentoModel.toString());
 		return mv;
 	}
+
+//	@RequestMapping(value = "/cadastroEstabelecimento", method = RequestMethod.POST)
+//	public ModelAndView salvar(Estacionamento estabelecimento, RedirectAttributes attributes) {
+//		ModelAndView mv = new ModelAndView("redirect:/cadastroEstabelecimento");
+//		criaArquivo();
+//		LocalDateTime horaAbertura = estabelecimento.getHoraAbertura();
+//		LocalDateTime horaFechamento = estabelecimento.getHoraAbertura();
+//		
+//		estacionamentoModel = estabelecimento;
+//		System.out.println(estacionamentoModel.toString());
+//		return mv;
+//	}
 
 //    @GetMapping("/entradaVeiculo")
 //    public String entradaForm(Model model) {
@@ -95,9 +129,9 @@ public class EstacionamentoController {
 		modelAndView.addObject("placaVeiculo", placaN);
 		modelAndView.addObject("tipoVeiculo", tipoVeiculoN);
 		modelAndView.addObject("dataEntrada", dataEntradaN.format(formatter));
-		
+
 		estadaDAO.add((Estada) infoEntradaVeiculo.get("novaEstada"));
-	
+
 		System.out.println((Estada) infoEntradaVeiculo.get("novaEstada"));
 
 		return modelAndView;
@@ -134,10 +168,7 @@ public class EstacionamentoController {
 
 		estadaVeiculo.setValorEstada(24.0);
 		System.out.println(estadaVeiculo);
-		System.out.println(estadaVeiculo.getNumEstada());
-		
 		estadaDAO.delete(estadaVeiculo);
-		
 
 		return modelAndView;
 	}

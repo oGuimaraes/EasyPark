@@ -16,16 +16,15 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Component
 public class Estacionamento {
 	private String nomeEstabelecimento;
-	private String horaAbertura;
-	private String horaFechamento;
+	private LocalTime horaAbertura;
+	private LocalTime horaFechamento;
 	private int quantidadeVagas;
 	private int qtdVeiculosEstacionados;
-	// private Valores valores;
 	private Map<String, Estada> estadaList;
 	private Double valorHora;
 	private Double valorAPagar;
 
-//    public Estacionamento(String nomeEstabelecimento, String horaAbertura, String horaFechamento, int quantidadeVagas, float valorHora) {
+//    public Estacionamento(String nomeEstabelecimento, LocalTime horaAbertura, LocalTime horaFechamento, int quantidadeVagas, float valorHora) {
 //        this.nomeEstabelecimento = nomeEstabelecimento;
 //        this.horaAbertura = horaAbertura;
 //        this.horaFechamento = horaFechamento;
@@ -33,6 +32,10 @@ public class Estacionamento {
 //        this.valorHora = valorHora;
 //        this.estadaList = new HashMap<>();
 //    }
+	
+	public Estacionamento() {
+		this.estadaList = new HashMap<>();
+	}
 
 	public String getNomeEstabelecimento() {
 		return nomeEstabelecimento;
@@ -42,19 +45,19 @@ public class Estacionamento {
 		this.nomeEstabelecimento = nome;
 	}
 
-	public String getHoraAbertura() {
+	public LocalTime getHoraAbertura() {
 		return horaAbertura;
 	}
 
-	public void setHoraAbertura(String horaAbertura) {
+	public void setHoraAbertura(LocalTime horaAbertura) {
 		this.horaAbertura = horaAbertura;
 	}
 
-	public String getHoraFechamento() {
+	public LocalTime getHoraFechamento() {
 		return horaFechamento;
 	}
 
-	public void setHoraFechamento(String horaFechamento) {
+	public void setHoraFechamento(LocalTime horaFechamento) {
 		this.horaFechamento = horaFechamento;
 	}
 
@@ -118,9 +121,8 @@ public class Estacionamento {
 
 		this.getEstadaList().put(veiculo.getPlaca(), novaEstada);
 
-		
 		estadaList.put(novaEstada.getVeiculo().getPlaca(), novaEstada);
-		
+		System.out.println("Veiculos Estacionados"+this.getEstadaList());
 		infoEntradaVeiculo.put("placaVeiculo", veiculo.getPlaca());
 		infoEntradaVeiculo.put("tipoVeiculo", veiculo.getTipoVeiculo());
 		infoEntradaVeiculo.put("dataEntrada", dataEntrada);
@@ -135,7 +137,7 @@ public class Estacionamento {
 		Double valorHoraSemMinutos = (double) (this.getValorHora() * horasPermanecidas);
 		Double valorMinutos = (double) ((this.getValorHora() / 60) * minutosPermanecidos);
 		valorAPagar = valorHoraSemMinutos + valorMinutos;
-		this.valorAPagar = valorAPagar;
+		this.setValorAPagar(valorAPagar);
 	}
 	
 
@@ -150,6 +152,14 @@ public class Estacionamento {
 
 	public void setEstadaList(Map<String, Estada> estadaList) {
 		this.estadaList = estadaList;
+	}
+
+	public Double getValorAPagar() {
+		return valorAPagar;
+	}
+
+	public void setValorAPagar(Double valorAPagar) {
+		this.valorAPagar = valorAPagar;
 	}
 
 }

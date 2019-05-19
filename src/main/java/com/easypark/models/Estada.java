@@ -168,19 +168,27 @@ public class Estada {
         this.dataEntrada = dataEntrada;
     }
 
-    @Override
-	public String toString() {
-		return "Estada " + numEstada + "[dataEntrada=" + dataEntrada +  ", dataSaida=" + dataSaida + ", horaEntrada=" + horaEntrada
-				+ ", horaSaida=" + horaSaida + ", veiculo=" + veiculo + ", tempoDePermanencia=" + tempoDePermanencia
-				+ ", valorEstada=" + valorEstada + "]";
-	}
+//    @Override
+//	public String toString() {
+//		return "Estada " + numEstada + "[dataEntrada=" + dataEntrada +  ", dataSaida=" + dataSaida + ", horaEntrada=" + horaEntrada
+//				+ ", horaSaida=" + horaSaida + ", veiculo=" + veiculo + ", tempoDePermanencia=" + tempoDePermanencia
+//				+ ", valorEstada=" + valorEstada + "]";
+//	}
+    
+    
 
 
 	public LocalDateTime getDataSaida() {
         return dataSaida;
     }
 
-    public void setDataSaida(LocalDateTime dataSaida) {
+    @Override
+	public String toString() {
+		return "Estada [veiculo=" + veiculo + "]";
+	}
+
+
+	public void setDataSaida(LocalDateTime dataSaida) {
         this.dataSaida = dataSaida;
     }
 
