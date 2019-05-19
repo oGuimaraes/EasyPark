@@ -99,32 +99,38 @@ public class Estacionamento {
 
 	StringBuilder sb = new StringBuilder();
 	
-	public Map<String, String> entradaVeiculo(Veiculo veiculo) {
-		Map<String,String> infoEntradaVeiculo = new HashMap<String,String>();
+	public Map<String, Object> entradaVeiculo(Veiculo veiculo) {
+		Map<String,Object> infoEntradaVeiculo = new HashMap<String,Object>();
 		
 		if (this.estadaList == null) {
 			this.estadaList = new HashMap<>();
 		}
-
-		LocalDateTime dataEntrada = LocalDateTime.now();
+		
+		/* Formatação String to DateTime */
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+		String strDataEntrada = LocalDateTime.now().format(formatter);
+		LocalDateTime dataEntrada = LocalDateTime.parse(strDataEntrada, formatter);
+		
 		LocalTime horaEntrada = LocalTime.now();
 		
 		Estada novaEstada = new Estada(dataEntrada, horaEntrada, veiculo);
 
 		this.getEstadaList().put(veiculo.getPlaca(), novaEstada);
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+
 		
-		estadaList.put(novaEstada.getPlaca(), novaEstada);
+		estadaList.put(novaEstada.getVeiculo().getPlaca(), novaEstada);
 		
 		infoEntradaVeiculo.put("placaVeiculo", veiculo.getPlaca());
 		infoEntradaVeiculo.put("tipoVeiculo", veiculo.getTipoVeiculo());
-		infoEntradaVeiculo.put("dataEntrada", dataEntrada.format(formatter).toString());
+		infoEntradaVeiculo.put("dataEntrada", dataEntrada);
+		infoEntradaVeiculo.put("novaEstada", novaEstada);
 		
 		return infoEntradaVeiculo;
 	}
 	
 	public void calculaValor(int horasPermanecidas, int minutosPermanecidos) {
 		Double valorAPagar;
+		System.out.println("Valor hora:" + this.getValorHora());
 		Double valorHoraSemMinutos = (double) (this.getValorHora() * horasPermanecidas);
 		Double valorMinutos = (double) ((this.getValorHora() / 60) * minutosPermanecidos);
 		valorAPagar = valorHoraSemMinutos + valorMinutos;

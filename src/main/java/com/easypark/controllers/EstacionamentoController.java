@@ -1,5 +1,10 @@
 package com.easypark.controllers;
-
+import java.io.File;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.io.File;
 import java.util.Map;
 
 import com.easypark.models.*;
@@ -18,10 +24,25 @@ import com.easypark.models.*;
 @Controller
 public class EstacionamentoController {
 	
+	
+	
+	
 	Estacionamento estacionamentoModel = new Estacionamento();
-
+	EstadaDAO estadaDAO = new EstadaDAO();
+	
+	
+	
+	public static void criaArquivo() {
+		File f = new File("estada.txt");
+		if (f.exists())
+			f.delete();
+	}
+	
+	
 	@RequestMapping("/index")
 	public String paginaInicial() {
+		estadaDAO.delete(EstadaDAO.get("XXX666"));
+		
 		return "index";
 	}
 
@@ -34,11 +55,30 @@ public class EstacionamentoController {
 	@RequestMapping(value = "/cadastroEstabelecimento", method = RequestMethod.POST)
 	public ModelAndView salvar(Estacionamento estabelecimento, RedirectAttributes attributes) {
 		ModelAndView mv = new ModelAndView("redirect:/cadastroEstabelecimento");
+		criaArquivo();
 		estacionamentoModel = estabelecimento;
 		System.out.println(estacionamentoModel.toString());
 		return mv;
 	}
 	
+//    @GetMapping("/entradaVeiculo")
+//    public String entradaForm(Model model) {
+//        model.addAttribute("veiculo", new Veiculo());
+//        return "entradaVeiculo";
+//    }
+//
+//    @PostMapping("/entradaVeiculo")
+//    public ModelAndView veiculoEstacionado(@ModelAttribute Veiculo veiculo) {
+//    	ModelAndView modelAndView = new ModelAndView("veiculoEstacionado");
+//    	Map<String, String> informacoesEstada = estacionamentoModel.entradaVeiculo(veiculo);
+//    	modelAndView.addObject("placaVeiculo", informacoesEstada.get("placaVeiculo"));
+//    	modelAndView.addObject("tipoVeiculo", informacoesEstada.get("tipoVeiculo"));
+//    	modelAndView.addObject("dataEntrada", informacoesEstada.get("dataEntrada"));
+//    	Map<String, Estada> newMap = estacionamentoModel.getEstadaList();
+//    	System.out.println(newMap.get(veiculo.getPlaca()));
+//    	return modelAndView;
+//    }
+
     @GetMapping("/entradaVeiculo")
     public String entradaForm(Model model) {
         model.addAttribute("veiculo", new Veiculo());
@@ -47,16 +87,35 @@ public class EstacionamentoController {
 
     @PostMapping("/entradaVeiculo")
     public ModelAndView veiculoEstacionado(@ModelAttribute Veiculo veiculo) {
+    	
     	ModelAndView modelAndView = new ModelAndView("veiculoEstacionado");
-    	Map<String, String> informacoesEstada = estacionamentoModel.entradaVeiculo(veiculo);
-    	modelAndView.addObject("placaVeiculo", informacoesEstada.get("placaVeiculo"));
-    	modelAndView.addObject("tipoVeiculo", informacoesEstada.get("tipoVeiculo"));
-    	modelAndView.addObject("dataEntrada", informacoesEstada.get("dataEntrada"));
+    	Map<String, Object> informacoesEstada = estacionamentoModel.entradaVeiculo(veiculo);
+    	
+    	String placaN =  (String)informacoesEstada.get("placaVeiculo");
+    	String tipoVeiculoN =  (String)informacoesEstada.get("tipoVeiculo");
+    	LocalDateTime dataEntradaN =  (LocalDateTime)informacoesEstada.get("dataEntrada");
+    	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+    	modelAndView.addObject("placaVeiculo",placaN);
+    	modelAndView.addObject("tipoVeiculo",tipoVeiculoN);
+    	modelAndView.addObject("dataEntrada",dataEntradaN.format(formatter));
+    	
+    	Estada nova = new Estada(dataEntradaN, LocalDateTime.MIN, 
+    			estacionamentoModel.getEstadaList().get(placaN).getHoraEntrada(), LocalTime.MIN, veiculo, LocalTime.MIN,  0.0);  	
+
+    	EstadaDAO.add(nova);
+    	
+//    	System.out.println("Retorno DAO.GET: "+ EstadaDAO.get(placaN));
+//    	System.out.println("Retorno padrão: " + estacionamentoModel.getEstadaList().get(placaN));
+    	
+    	
+    	
     	Map<String, Estada> newMap = estacionamentoModel.getEstadaList();
-    	System.out.println(newMap.get(veiculo.getPlaca()));
     	return modelAndView;
     }
-
+    
+    
+    
+    
     @GetMapping("/saidaVeiculo")
     public String saidaForm(Model model) {
         model.addAttribute("veiculo", new Veiculo());
