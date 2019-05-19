@@ -1,5 +1,5 @@
 package com.easypark.models;
 
-public class EstacionamentoDAO {
+public class EstacionamentoDAO implements SystemDAO {
 
 }

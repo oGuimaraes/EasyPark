@@ -10,14 +10,13 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EstadaDAO {
+public class EstadaDAO implements SystemDAO<Estada, String> {
 
 	public EstadaDAO() {
-
 	}
 
-	// @Override
-	public static void add(Estada est) {
+	@Override
+	public void add(Estada est) {
 		Estada nova = est;
 		try (BufferedWriter buffer_saida = new BufferedWriter(new FileWriter("estada.txt", true))) {
 			String separadorDeLinha = System.getProperty("line.separator");
@@ -37,8 +36,8 @@ public class EstadaDAO {
 		}
 	}
 
-	// @Override
-	public static Estada get(String chave) {
+	@Override
+	public Estada get(String chave) {
 		Estada retorno = null;
 		Estada est = null;
 		Veiculo v = null;
@@ -72,7 +71,7 @@ public class EstadaDAO {
 		return retorno;
 	}
 
-	// @Override
+	@Override
 	public List<Estada> getAll() {
 		List<Estada> ests = new ArrayList<Estada>();
 		Estada est = null;
@@ -104,7 +103,7 @@ public class EstadaDAO {
 		return ests;
 	}
 
-	// @Override
+	@Override
 	public void update(Estada est) {
 		List<Estada> ests = getAll();
 		int numEstada = Estada.getNumEstada();
@@ -115,10 +114,10 @@ public class EstadaDAO {
 		saveToFile(ests);
 	}
 
-	// @Override
+	@Override
 	public void delete(Estada est) {
 		List<Estada> ests = getAll();
-		int numEstada = Estada.getNumEstada();
+		int numEstada = Estada.getNumEstada()-1;
 
 		if (numEstada != -1) {
 			ests.remove(numEstada);

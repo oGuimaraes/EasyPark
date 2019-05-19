@@ -1,4 +1,5 @@
 package com.easypark.controllers;
+
 import java.io.File;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -23,7 +24,7 @@ import com.easypark.models.*;
 
 @Controller
 public class EstacionamentoController {
-	
+
 	Estacionamento estacionamentoModel = new Estacionamento();
 	EstadaDAO estadaDAO = new EstadaDAO();
 
@@ -32,13 +33,13 @@ public class EstacionamentoController {
 		if (f.exists())
 			f.delete();
 	}
-	
+
 	@RequestMapping("/index")
 	public String paginaInicial() {
 		Estada estadaAux = estacionamentoModel.getEstadaVeiculo("3");
 		estadaAux.setValorEstada(28.0);
 		estadaDAO.update(estadaAux);
-		
+
 		return "index";
 	}
 
@@ -56,7 +57,7 @@ public class EstacionamentoController {
 		System.out.println(estacionamentoModel.toString());
 		return mv;
 	}
-	
+
 //    @GetMapping("/entradaVeiculo")
 //    public String entradaForm(Model model) {
 //        model.addAttribute("veiculo", new Veiculo());
@@ -75,76 +76,75 @@ public class EstacionamentoController {
 //    	return modelAndView;
 //    }
 
-    @GetMapping("/entradaVeiculo")
-    public String entradaForm(Model model) {
-        model.addAttribute("veiculo", new Veiculo());
-        return "entradaVeiculo";
-    }
+	@GetMapping("/entradaVeiculo")
+	public String entradaForm(Model model) {
+		model.addAttribute("veiculo", new Veiculo());
+		return "entradaVeiculo";
+	}
 
-    @PostMapping("/entradaVeiculo")
-    public ModelAndView veiculoEstacionado(@ModelAttribute Veiculo veiculo) {
-    	
-    	ModelAndView modelAndView = new ModelAndView("veiculoEstacionado");
-    	Map<String, Object> informacoesEstada = estacionamentoModel.entradaVeiculo(veiculo);
-    	
-    	String placaN =  (String)informacoesEstada.get("placaVeiculo");
-    	String tipoVeiculoN =  (String)informacoesEstada.get("tipoVeiculo");
-    	LocalDateTime dataEntradaN =  (LocalDateTime)informacoesEstada.get("dataEntrada");
-    	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
-    	modelAndView.addObject("placaVeiculo",placaN);
-    	modelAndView.addObject("tipoVeiculo",tipoVeiculoN);
-    	modelAndView.addObject("dataEntrada",dataEntradaN.format(formatter));
-    	 	
-    	
-    	EstadaDAO.add((Estada)informacoesEstada.get("novaEstada"));
+	@PostMapping("/entradaVeiculo")
+	public ModelAndView veiculoEstacionado(@ModelAttribute Veiculo veiculo) {
 
-		List<Estada> estadas = estadaDAO.getAll();
+		ModelAndView modelAndView = new ModelAndView("veiculoEstacionado");
+		Map<String, Object> infoEntradaVeiculo = estacionamentoModel.entradaVeiculo(veiculo);
+
+		String placaN = (String) infoEntradaVeiculo.get("placaVeiculo");
+		String tipoVeiculoN = (String) infoEntradaVeiculo.get("tipoVeiculo");
+		LocalDateTime dataEntradaN = (LocalDateTime) infoEntradaVeiculo.get("dataEntrada");
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+		modelAndView.addObject("placaVeiculo", placaN);
+		modelAndView.addObject("tipoVeiculo", tipoVeiculoN);
+		modelAndView.addObject("dataEntrada", dataEntradaN.format(formatter));
 		
-		System.out.println(estadas);
-    	
-    	return modelAndView;
-    }
+		estadaDAO.add((Estada) infoEntradaVeiculo.get("novaEstada"));
+	
+		System.out.println((Estada) infoEntradaVeiculo.get("novaEstada"));
 
-    @GetMapping("/saidaVeiculo")
-    public String saidaForm(Model model) {
-        model.addAttribute("veiculo", new Veiculo());
-        return "saidaVeiculo";
-    }
-    
-    @PostMapping("/saidaVeiculo")
-    	public ModelAndView veiculoEstacionado(@RequestParam("placa") String placaVeiculoSaindo) {
-    	ModelAndView modelAndView = new ModelAndView("veiculoSaindo");
-    	Map<String, Estada> mapEstada = estacionamentoModel.getEstadaList();
+		return modelAndView;
+	}
 
-    	Estada estadaVeiculo = mapEstada.get(placaVeiculoSaindo);
+	@GetMapping("/saidaVeiculo")
+	public String saidaForm(Model model) {
+		model.addAttribute("veiculo", new Veiculo());
+		return "saidaVeiculo";
+	}
 
-    	Map<String, Object> informacoesSaida = estadaVeiculo.saidaVeiculo(estacionamentoModel, placaVeiculoSaindo);
+	@PostMapping("/saidaVeiculo")
+	public ModelAndView veiculoEstacionado(@RequestParam("placa") String placaVeiculoSaindo) {
+		ModelAndView modelAndView = new ModelAndView("veiculoSaindo");
+		Map<String, Estada> mapEstada = estacionamentoModel.getEstadaList();
 
-    	modelAndView.addObject("placaVeiculo", placaVeiculoSaindo);
-    	modelAndView.addObject("tempoPermanecido", informacoesSaida.get("tempoPermanecido"));
-    	modelAndView.addObject("dataHoraEntrada", informacoesSaida.get("dataHoraEntrada"));
-    	modelAndView.addObject("dataHoraSaida", informacoesSaida.get("dataHoraSaida"));
-    	modelAndView.addObject("tipoVeiculo", informacoesSaida.get("tipoVeiculo"));
+		Estada estadaVeiculo = mapEstada.get(placaVeiculoSaindo);
 
-    	int minutosPermanecidos = (int) informacoesSaida.get("minutosPermanecidos");
-    	int horasPermanecidas = (int) informacoesSaida.get("horasPermanecidas");
-    	
-    	Double valorHora = estacionamentoModel.getValorHora();
-    	estadaVeiculo.calculaValor(horasPermanecidas, minutosPermanecidos, valorHora);
-    	
-    	modelAndView.addObject("valorAPagar", estadaVeiculo.getValorEstada());
-    	
-    	estadaVeiculo.setValorEstada(24.0);
-    	estadaDAO.update(estadaVeiculo);
-    	
-    	//estadaDAO.delete(EstadaDAO.get(placaVeiculoSaindo));
-    	
-    	return modelAndView;	
-    }
-    
+		Map<String, Object> informacoesSaida = estadaVeiculo.saidaVeiculo(estacionamentoModel, placaVeiculoSaindo);
+
+		modelAndView.addObject("placaVeiculo", placaVeiculoSaindo);
+		modelAndView.addObject("tempoPermanecido", informacoesSaida.get("tempoPermanecido"));
+		modelAndView.addObject("dataHoraEntrada", informacoesSaida.get("dataHoraEntrada"));
+		modelAndView.addObject("dataHoraSaida", informacoesSaida.get("dataHoraSaida"));
+		modelAndView.addObject("tipoVeiculo", informacoesSaida.get("tipoVeiculo"));
+
+		int minutosPermanecidos = (int) informacoesSaida.get("minutosPermanecidos");
+		int horasPermanecidas = (int) informacoesSaida.get("horasPermanecidas");
+
+		Double valorHora = estacionamentoModel.getValorHora();
+		estadaVeiculo.calculaValor(horasPermanecidas, minutosPermanecidos, valorHora);
+
+		modelAndView.addObject("valorAPagar", estadaVeiculo.getValorEstada());
+
+		estadaVeiculo.setValorEstada(24.0);
+		System.out.println(estadaVeiculo);
+		System.out.println(estadaVeiculo.getNumEstada());
+		
+		estadaDAO.delete(estadaVeiculo);
+		
+
+		return modelAndView;
+	}
+
 	@RequestMapping("/saidaVeiculo")
 	public String saidaVeiculo() {
 		return "saidaVeiculo";
 	}
-	
+
 }
