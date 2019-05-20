@@ -24,14 +24,14 @@ public class Estacionamento {
 	private Double valorHora;
 	private Double valorAPagar;
 
-//    public Estacionamento(String nomeEstabelecimento, LocalTime horaAbertura, LocalTime horaFechamento, int quantidadeVagas, float valorHora) {
-//        this.nomeEstabelecimento = nomeEstabelecimento;
-//        this.horaAbertura = horaAbertura;
-//        this.horaFechamento = horaFechamento;
-//        this.quantidadeVagas = quantidadeVagas;
-//        this.valorHora = valorHora;
-//        this.estadaList = new HashMap<>();
-//    }
+    public Estacionamento(String nomeEstabelecimento, LocalTime horaAbertura, LocalTime horaFechamento, int quantidadeVagas, Double valorHora) {
+        this.nomeEstabelecimento = nomeEstabelecimento;
+        this.horaAbertura = horaAbertura;
+        this.horaFechamento = horaFechamento;
+        this.quantidadeVagas = quantidadeVagas;
+        this.valorHora = valorHora;
+        this.estadaList = new HashMap<>();
+    }
 	
 	public Estacionamento() {
 		this.estadaList = new HashMap<>();

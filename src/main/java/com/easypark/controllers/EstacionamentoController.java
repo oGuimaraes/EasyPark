@@ -80,36 +80,6 @@ public class EstacionamentoController {
 		return mv;
 	}
 
-//	@RequestMapping(value = "/cadastroEstabelecimento", method = RequestMethod.POST)
-//	public ModelAndView salvar(Estacionamento estabelecimento, RedirectAttributes attributes) {
-//		ModelAndView mv = new ModelAndView("redirect:/cadastroEstabelecimento");
-//		criaArquivo();
-//		LocalDateTime horaAbertura = estabelecimento.getHoraAbertura();
-//		LocalDateTime horaFechamento = estabelecimento.getHoraAbertura();
-//		
-//		estacionamentoModel = estabelecimento;
-//		System.out.println(estacionamentoModel.toString());
-//		return mv;
-//	}
-
-//    @GetMapping("/entradaVeiculo")
-//    public String entradaForm(Model model) {
-//        model.addAttribute("veiculo", new Veiculo());
-//        return "entradaVeiculo";
-//    }
-//
-//    @PostMapping("/entradaVeiculo")
-//    public ModelAndView veiculoEstacionado(@ModelAttribute Veiculo veiculo) {
-//    	ModelAndView modelAndView = new ModelAndView("veiculoEstacionado");
-//    	Map<String, String> informacoesEstada = estacionamentoModel.entradaVeiculo(veiculo);
-//    	modelAndView.addObject("placaVeiculo", informacoesEstada.get("placaVeiculo"));
-//    	modelAndView.addObject("tipoVeiculo", informacoesEstada.get("tipoVeiculo"));
-//    	modelAndView.addObject("dataEntrada", informacoesEstada.get("dataEntrada"));
-//    	Map<String, Estada> newMap = estacionamentoModel.getEstadaList();
-//    	System.out.println(newMap.get(veiculo.getPlaca()));
-//    	return modelAndView;
-//    }
-
 	@GetMapping("/entradaVeiculo")
 	public String entradaForm(Model model) {
 		model.addAttribute("veiculo", new Veiculo());

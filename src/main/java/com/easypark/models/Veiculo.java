@@ -9,7 +9,16 @@ public class Veiculo {
     private String tipoVeiculo;
     List<Estada> estadas = new ArrayList<>();
 
-    public String getPlaca() {
+    public Veiculo(String placa, String tipoVeiculo) {
+		this.setPlaca(placa);
+		this.setTipoVeiculo(tipoVeiculo);
+	}
+    
+    public Veiculo() {
+    	
+    }
+
+	public String getPlaca() {
         return placa;
     }
 
