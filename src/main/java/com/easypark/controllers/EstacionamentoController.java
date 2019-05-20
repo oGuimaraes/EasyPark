@@ -50,34 +50,45 @@ public class EstacionamentoController {
 	}
 
 	@RequestMapping(value = "/cadastroEstabelecimento", method = RequestMethod.GET)
-	public ModelAndView novo(Estacionamento estacionamento) {
+	public ModelAndView informacoes(Estacionamento estacionamento) {
 		ModelAndView mv = new ModelAndView("cadastroEstabelecimento");
 		return mv;
 	}
 
-//	public ModelAndView salvar(Estacionamento estabelecimento, RedirectAttributes attributes) {
-//	@RequestParam("placa") String placaVeiculoSaindo
-
 	@RequestMapping(value = "/cadastroEstabelecimento", method = RequestMethod.POST)
 	public ModelAndView salvar(@RequestParam("nomeEstabelecimento") String nomeEstabelecimento,
-			@RequestParam("horaAbertura") String horaAbertura, @RequestParam("horaFechamento") String horaFechamento,
-			@RequestParam("quantidadeVagas") int quantidadeVagas, @RequestParam("valorHora") Double valorHora) {
-
-		estacionamentoModel.setNomeEstabelecimento(nomeEstabelecimento);
-		estacionamentoModel.setQuantidadeVagas(quantidadeVagas);
-		estacionamentoModel.setValorHora(valorHora);
+							   @RequestParam("horaAbertura") String horaAbertura,
+							   @RequestParam("horaFechamento") String horaFechamento,
+			                   @RequestParam("quantidadeVagas") int quantidadeVagas, 
+			                   @RequestParam("valorHora") Double valorHora) {
+		
+		ModelAndView mv = new ModelAndView("redirect:/infoEstabelecimentoCadastrado");
+		criaArquivo();
+		
+		/* Formatação e Data */
 		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm");
 		LocalTime horaAberturaFormat = LocalTime.parse(horaAbertura, dtf);
 		LocalTime horaFechamentoFormat = LocalTime.parse(horaFechamento, dtf);
+		estacionamentoModel.setNomeEstabelecimento(nomeEstabelecimento);
+		estacionamentoModel.setQuantidadeVagas(quantidadeVagas);
+		estacionamentoModel.setValorHora(valorHora);
 		estacionamentoModel.setHoraAbertura(horaAberturaFormat);
 		estacionamentoModel.setHoraFechamento(horaFechamentoFormat);
-
-		ModelAndView mv = new ModelAndView("redirect:/cadastroEstabelecimento");		
-		criaArquivo();
 		
+		ModelAndView modelAndView = new ModelAndView("infoEstabelecimentoCadastrado");
+		modelAndView.addObject("nomeEstabelecimento", nomeEstabelecimento);
+		modelAndView.addObject("quantidadeVagas", quantidadeVagas);
+		modelAndView.addObject("valorHora", valorHora);
+		modelAndView.addObject("horaAbertura", horaAberturaFormat);
+		modelAndView.addObject("horaFechamento", horaFechamentoFormat);
+	
 		estacionamentoDAO.add(estacionamentoModel);
+		
+		/* Printa as informações do estabelecimento instanciado no console */
 		System.out.println(estacionamentoModel.toString());
-		return mv;
+		
+		
+		return modelAndView;
 	}
 
 	@GetMapping("/entradaVeiculo")
