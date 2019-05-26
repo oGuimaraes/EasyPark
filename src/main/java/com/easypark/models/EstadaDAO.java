@@ -6,6 +6,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,7 +33,7 @@ public class EstadaDAO implements SystemDAO<Estada, String> {
             buffer_saida.newLine();
             buffer_saida.flush();
         } catch (Exception e) {
-            System.out.println("ERRO ao gravar o Veiculo " + nova.getVeiculo().getPlaca() + "' no disco!");
+            System.out.println("Erro ao gravar o Veiculo " + nova.getVeiculo().getPlaca() + "' no disco!");
             e.printStackTrace();
         }
     }
@@ -49,7 +50,7 @@ public class EstadaDAO implements SystemDAO<Estada, String> {
                 }
             }
         } catch (Exception e) {
-            System.out.println("ERRO ao ler o Veiculo de placa '" + key + "' do disco r�gido!");
+            System.out.println("Erro ao ler o Veiculo de placa '" + key + "' do disco rigido!");
             e.printStackTrace();
         }
         return est;
@@ -84,7 +85,7 @@ public class EstadaDAO implements SystemDAO<Estada, String> {
                 ests.add(est);
             }
         } catch (Exception e) {
-            System.out.println("ERRO ao ler as Estadas do disco r�gido!");
+            System.out.println("Erro ao ler as Estadas do disco rigido!");
             e.printStackTrace();
         }
         return ests;
@@ -95,7 +96,7 @@ public class EstadaDAO implements SystemDAO<Estada, String> {
 
         List<Estada> ests = getAll();
         int index = ests.indexOf(n);
-        System.out.println("imprimindo index dentro do update" + index);
+        System.out.println("Utualizado index: " + index);
         if (index != -1) {
             ests.set(index, n);
         }
@@ -108,7 +109,7 @@ public class EstadaDAO implements SystemDAO<Estada, String> {
 
         List<Estada> ests = getAll();
         int index = ests.indexOf(est);
-        System.out.println("imprimindo index dentro do delete" + index);
+        System.out.println("Deletado index: " + index);
         if (index != -1) {
             ests.remove(index);
         }
@@ -134,10 +135,50 @@ public class EstadaDAO implements SystemDAO<Estada, String> {
                 buffer_saida.flush();
             }
         } catch (Exception e) {
-            System.out.println("ERRO ao gravar a Estada no disco!");
+            System.out.println("Erro ao gravar a Estada no disco!");
             e.printStackTrace();
         }
     }
+    
+    public void instanciaEstadas(Estacionamento estacionamento) {
+        try (BufferedReader buffer_entrada = new BufferedReader(new FileReader("estada.txt"))) {
+            String line, dataEntradaStr, horaEntradaStr, placaVeiculo, tipoVeiculo;
+            String[] lineStr;
+            Veiculo veiculo;
+            Estada estada;
+            
 
+
+            System.out.println("\n\nInstancias: \n");
+            while ((line = buffer_entrada.readLine()) != null) {
+               lineStr = line.split("/");
+               dataEntradaStr = lineStr[0];
+               horaEntradaStr = lineStr[1];
+               placaVeiculo = lineStr[2];
+               tipoVeiculo = lineStr[3];
+                        
+               /* Converte String para Datetime */
+               	LocalDateTime dataEntrada = LocalDateTime.parse(dataEntradaStr);
+               	LocalTime horaEntrada = LocalTime.parse(horaEntradaStr);
+
+               /* Intancia Veiculo */
+               veiculo = new Veiculo (placaVeiculo, tipoVeiculo);
+
+               /* Intancia Estada */
+               estada = new Estada(dataEntrada, horaEntrada, veiculo);
+               
+               /* Adiciona a estada na lista de estadas do Estacionamento */
+               estacionamento.getEstadaList().put(placaVeiculo, estada);
+               
+               System.out.println("Data Entrada: " + dataEntradaStr);
+               System.out.println("Hora Entrada: " + horaEntradaStr);
+               System.out.println("Placa: " + placaVeiculo);
+               System.out.println("Tipo: " + tipoVeiculo + "\n");
+            }
+        } catch (Exception e) {
+            System.out.println("Erro ao ler as Estadas do disco rigido!");
+            e.printStackTrace();
+        }
+    }
 
 }

@@ -31,19 +31,13 @@ public class EstacionamentoController {
 
 	private static void criaArquivo() {
 		File f = new File("estada.txt");
-		if (f.exists())
-			f.delete();
 		File x = new File("estacionamento.txt");
-		if (x.exists())
-			x.delete();
 	}
 
 	@RequestMapping("/index")
 	public String paginaInicial() {
-		
-		estacionamentoModel.setNomeEstabelecimento("tchutchuca");
-
-		System.out.println(estacionamentoModel.toString());
+		estacionamentoModel = estacionamentoDAO.instanciaEstacionamento();
+		estadaDAO.instanciaEstadas(estacionamentoModel);
 		return "index";
 	}
 
