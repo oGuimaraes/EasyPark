@@ -12,7 +12,6 @@ public class EasyparkApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(EasyparkApplication.class, args);
-
 	}
 }
 

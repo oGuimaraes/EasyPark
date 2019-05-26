@@ -7,7 +7,7 @@ public class Veiculo {
 
     private String placa;
     private String tipoVeiculo;
-    List<Estada> estadas = new ArrayList<>();
+    //List<Estada> estadas = new ArrayList<>();
 
     public Veiculo(String placa, String tipoVeiculo) {
 		this.setPlaca(placa);
@@ -36,7 +36,7 @@ public class Veiculo {
 
 	@Override
 	public String toString() {
-		return "Veiculo {placa=" + placa + ", tipoVeiculo=" + tipoVeiculo + "]";
+		return new StringBuilder().append(placa).append(";").append(tipoVeiculo).toString();
 	}
     
 	

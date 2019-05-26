@@ -4,160 +4,140 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class EstadaDAO implements SystemDAO<Estada, String> {
 
-	public EstadaDAO() {
-	}
+    public EstadaDAO() {
+    }
 
-	@Override
-	public void add(Estada est) {
-		Estada nova = est;
-		try (BufferedWriter buffer_saida = new BufferedWriter(new FileWriter("estada.txt", true))) {
-			String separadorDeLinha = System.getProperty("line.separator");
-			buffer_saida.write(nova.getVeiculo().getPlaca() + separadorDeLinha);
-			buffer_saida.write(nova.getDataEntrada() + separadorDeLinha);
-			buffer_saida.write(nova.getDataSaida() + separadorDeLinha);
-			buffer_saida.write(nova.getHoraEntrada() + separadorDeLinha);
-			buffer_saida.write(nova.getHoraSaida() + separadorDeLinha);
-			buffer_saida.write(nova.getVeiculo().getTipoVeiculo() + separadorDeLinha);
-			buffer_saida.write(nova.getTempoDePermanencia() + separadorDeLinha);
-			buffer_saida.write(nova.getValorEstada() + separadorDeLinha);
-			buffer_saida.flush();
+    @Override
+    public void add(Estada nova) {
 
-		} catch (Exception e) {
-			System.out.println("ERRO ao gravar o Veiculo " + nova.getVeiculo().getPlaca() + "' no disco!");
-			e.printStackTrace();
-		}
-	}
+        try (BufferedWriter buffer_saida = new BufferedWriter(new FileWriter("estada.txt", true))) {
+            buffer_saida.write(nova.getDataEntrada() + "/");
+            buffer_saida.write(nova.getHoraEntrada() + "/");
+            buffer_saida.write(nova.getVeiculo().getPlaca() + "/");
+            buffer_saida.write(nova.getVeiculo().getTipoVeiculo() + "/");
+            if (nova.getDataSaida() != null) {
+                buffer_saida.write(nova.getDataSaida() + "/");
+                buffer_saida.write(nova.getHoraSaida() + "/");
+                buffer_saida.write(nova.getTempoDePermanencia() + "/");
+                buffer_saida.write(nova.getValorEstada() + "/");
+            }
+            buffer_saida.newLine();
+            buffer_saida.flush();
+        } catch (Exception e) {
+            System.out.println("ERRO ao gravar o Veiculo " + nova.getVeiculo().getPlaca() + "' no disco!");
+            e.printStackTrace();
+        }
+    }
 
-	@Override
-	public Estada get(String chave) {
-		Estada retorno = null;
-		Estada est = null;
-		Veiculo v = null;
+    @Override
+    public Estada get(String key) {
+        Estada est = null;
+        try (BufferedReader buffer_entrada = new BufferedReader(new FileReader("estada.txt"))) {
+            String line;
+            while ((line = buffer_entrada.readLine()) != null) {
+                if (line.contains(key)) {
+                    est = setValues(line);
+                    break;
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("ERRO ao ler o Veiculo de placa '" + key + "' do disco r�gido!");
+            e.printStackTrace();
+        }
+        return est;
+    }
 
-		try (BufferedReader buffer_entrada = new BufferedReader(new FileReader("estada.txt"))) {
-			String idSTR;
+    private Estada setValues(String line) {
+        String[] atributos = line.split("/");
+        LocalDateTime dataEntrada = LocalDateTime.parse(atributos[0]);
+        LocalTime horaEntrada = LocalTime.parse(atributos[1]);
+        String placaVeiculo = atributos[2];
+        String tipoVeiculo = atributos[3];
+        Veiculo v = new Veiculo(placaVeiculo, tipoVeiculo);
+        Estada est = new Estada(dataEntrada, horaEntrada, v);
+        if (atributos.length > 4) {
+            est.setDataSaida(LocalDateTime.parse(atributos[4]));
+            est.setHoraSaida(LocalTime.parse(atributos[5]));
+            est.setTempoDePermanencia(Long.parseLong(atributos[6]));
+            est.setValorEstada(Double.parseDouble(atributos[7]));
+        }
+        est.setVeiculo(v);
+        return est;
+    }
 
-			while ((idSTR = buffer_entrada.readLine()) != null) {
-				
-				v = new Veiculo();
-				est = new Estada();
-				v.setPlaca(idSTR);
-				est.setDataEntrada(LocalDateTime.parse(buffer_entrada.readLine()));
-				est.setDataSaida(LocalDateTime.parse(buffer_entrada.readLine()));
-				est.setHoraEntrada(LocalTime.parse(buffer_entrada.readLine()));
-				est.setHoraSaida(LocalTime.parse(buffer_entrada.readLine()));
-				v.setTipoVeiculo(buffer_entrada.readLine());
-				est.setTempoDePermanencia(LocalTime.parse(buffer_entrada.readLine()));
-				est.setValorEstada(Double.parseDouble(buffer_entrada.readLine()));
-				est.setVeiculo(v);
+    @Override
+    public List<Estada> getAll() {
+        List<Estada> ests = new ArrayList<>();
+        Estada est;
+        try (BufferedReader buffer_entrada = new BufferedReader(new FileReader("estada.txt"))) {
+            String line;
+            while ((line = buffer_entrada.readLine()) != null) {
+                est = setValues(line);
+                ests.add(est);
+            }
+        } catch (Exception e) {
+            System.out.println("ERRO ao ler as Estadas do disco r�gido!");
+            e.printStackTrace();
+        }
+        return ests;
+    }
 
-				if (chave.equals(est.getVeiculo().getPlaca())) {
-					retorno = est;
-					break;
-				}
-			}
-		} catch (Exception e) {
-			System.out.println("ERRO ao ler o Veiculo de placa '" + est.getVeiculo().getPlaca() + "' do disco rígido!");
-			e.printStackTrace();
-		}
-		return retorno;
-	}
+    @Override
+    public void update(Estada n) {
 
-	@Override
-	public List<Estada> getAll() {
-		List<Estada> ests = new ArrayList<Estada>();
-		Estada est = null;
-		Veiculo v = null;
+        List<Estada> ests = getAll();
+        int index = ests.indexOf(n);
+        System.out.println("imprimindo index dentro do update" + index);
+        if (index != -1) {
+            ests.set(index, n);
+        }
+        saveToFile(ests);
 
-		try (BufferedReader buffer_entrada = new BufferedReader(new FileReader("estada.txt"))) {
-			String idSTR;
+    }
 
-			while ((idSTR = buffer_entrada.readLine()) != null) {
-				est = new Estada();
-				v = new Veiculo();
-				v.setPlaca(idSTR);
-				est.setDataEntrada(LocalDateTime.parse(buffer_entrada.readLine()));
-				est.setDataSaida(LocalDateTime.parse(buffer_entrada.readLine()));
-				est.setHoraEntrada(LocalTime.parse(buffer_entrada.readLine()));
-				est.setHoraSaida(LocalTime.parse(buffer_entrada.readLine()));
-				v.setTipoVeiculo(buffer_entrada.readLine());
-				est.setTempoDePermanencia(LocalTime.parse(buffer_entrada.readLine()));
-				est.setValorEstada(Double.parseDouble(buffer_entrada.readLine()));
-				est.setVeiculo(v);
+    @Override
+    public void delete(Estada est) {
 
-				ests.add(est);
-				
-			}
-		} catch (Exception e) {
-			System.out.println("ERRO ao ler as Estadas do disco rígido!");
-			e.printStackTrace();
-		}
-		return ests;
-	}
+        List<Estada> ests = getAll();
+        int index = ests.indexOf(est);
+        System.out.println("imprimindo index dentro do delete" + index);
+        if (index != -1) {
+            ests.remove(index);
+        }
+        saveToFile(ests);
 
-	@Override
-	public void update(Estada est) {
-		List<Estada> ests = getAll();
-		int numEstada = Estada.getNumEstada();
+    }
 
-		if (numEstada != -1) {
-			ests.set(numEstada, est);
-		}
-		saveToFile(ests);
-	}
+    private void saveToFile(List<Estada> ests) {
+        try (BufferedWriter buffer_saida = new BufferedWriter(new FileWriter("estada.txt", false))) {
+            for (Estada est : ests) {
 
-	@Override
-	public void delete(Estada est) {
-		List<Estada> ests = getAll();
-		int numEstada = Estada.getNumEstada()-1;
-		System.out.println("nº estada: " + numEstada);
+                buffer_saida.write(est.getDataEntrada() + "/");
+                buffer_saida.write(est.getHoraEntrada() + "/");
+                buffer_saida.write(est.getVeiculo().getPlaca() + "/");
+                buffer_saida.write(est.getVeiculo().getTipoVeiculo() + "/");
+                if (est.getHoraSaida() != null) {
+                    buffer_saida.write(est.getDataSaida() + "/");
+                    buffer_saida.write(est.getHoraSaida() + "/");
+                    buffer_saida.write(est.getTempoDePermanencia() + "/");
+                    buffer_saida.write(est.getValorEstada() + "/");
+                }
+                buffer_saida.newLine();
+                buffer_saida.flush();
+            }
+        } catch (Exception e) {
+            System.out.println("ERRO ao gravar a Estada no disco!");
+            e.printStackTrace();
+        }
+    }
 
-		if (numEstada != -1) {
-			ests.remove(numEstada);
-		}
-		saveToFile(ests);
-	}
-	
-//	@Override
-//	public void delete(Estada est) {
-//		List<Estada> estadaList = getAll();
-//		
-//		System.out.println("Qual Veiculo? " + est);
-//		estadaList.remove(est);
-//		System.out.println("Lista: " + estadaList);
-//
-//		saveToFile(estadaList);
-//	}
-//	
-
-	private void saveToFile(List<Estada> ests) {
-		try (BufferedWriter buffer_saida = new BufferedWriter(new FileWriter("estada.txt", false))) {
-
-			String separadorDeLinha = System.getProperty("line.separator");
-			for (Estada est : ests) {
-				buffer_saida.write(est.getVeiculo().getPlaca() + separadorDeLinha);
-				buffer_saida.write(est.getDataEntrada() + separadorDeLinha);
-				buffer_saida.write(est.getDataSaida() + separadorDeLinha);
-				buffer_saida.write(est.getHoraEntrada() + separadorDeLinha);
-				buffer_saida.write(est.getHoraSaida() + separadorDeLinha);
-				buffer_saida.write(est.getVeiculo().getTipoVeiculo() + separadorDeLinha);
-				buffer_saida.write(est.getTempoDePermanencia() + separadorDeLinha);
-				buffer_saida.write(est.getValorEstada() + separadorDeLinha);
-				buffer_saida.flush();
-
-			}
-		} catch (Exception e) {
-			System.out.println("ERRO ao gravar a Estada no disco!");
-			e.printStackTrace();
-		}
-	}
 
 }

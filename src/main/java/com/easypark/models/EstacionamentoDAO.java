@@ -4,121 +4,133 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+import java.util.Scanner;
+
+
 
 public class EstacionamentoDAO implements SystemDAO<Estacionamento, String> {
 
-	public EstacionamentoDAO(){
-		
-	}
-	@Override
-	public void add(Estacionamento est) {
-		Estacionamento novo = est;
-		try (BufferedWriter buffer_saida = new BufferedWriter(new FileWriter("estacionamento.txt", true))) {
-			String separadorDeLinha = System.getProperty("line.separator");
-			buffer_saida.write(novo.getNomeEstabelecimento() + separadorDeLinha);
-			buffer_saida.write(novo.getHoraAbertura() + separadorDeLinha);
-			buffer_saida.write(novo.getHoraFechamento() + separadorDeLinha);
-			buffer_saida.write(novo.getQuantidadeVagas() + separadorDeLinha);
-			buffer_saida.write(novo.getValorHora() + separadorDeLinha);
-			buffer_saida.flush();
+    public EstacionamentoDAO() {
 
-		} catch (Exception e) {
-			System.out.println("ERRO ao gravar o Estacionamento " + novo.getNomeEstabelecimento() + "' no disco!");
-			e.printStackTrace();
-		}
-	}
+    }
 
-	@Override
-	public Estacionamento get(String chave) {
-		Estacionamento retorno = null;
-		Estacionamento est = null;
-		// Veiculo v = null;
+    @Override
+    public void add(Estacionamento est) {
+        try (BufferedWriter buffer_saida = new BufferedWriter(new FileWriter("estacionamento.txt", true))) {
 
-		try (BufferedReader buffer_entrada = new BufferedReader(new FileReader("estacionamento.txt"))) {
-			String idSTR;
+            buffer_saida.write(est.getNomeEstabelecimento() + ";");
+            buffer_saida.write(est.getHoraAbertura() + ";");
+            buffer_saida.write(est.getHoraFechamento() + ";");
+            buffer_saida.write(est.getQuantidadeVagas() + ";");
+            buffer_saida.write(est.getValorHora() + ";");
+            buffer_saida.newLine();
+            buffer_saida.flush();
 
-			while ((idSTR = buffer_entrada.readLine()) != null) {
-				est = new Estacionamento();
-				est.setNomeEstabelecimento(buffer_entrada.readLine());
-				est.setHoraAbertura(LocalTime.parse(buffer_entrada.readLine()));
-				est.setHoraFechamento(LocalTime.parse(buffer_entrada.readLine()));
-				est.setQuantidadeVagas(Integer.parseInt(buffer_entrada.readLine()));
-				est.setValorHora(Double.parseDouble(buffer_entrada.readLine()));
-				
-				if (chave.equals(est.getNomeEstabelecimento())) {
-					retorno = est;
-					break;
-				}
-			}
-		} catch (Exception e) {
-			System.out
-					.println("ERRO a Estacionamento com nome '" + est.getNomeEstabelecimento() + "' do disco rígido!");
-			e.printStackTrace();
-		}
-		return retorno;
-	}
+        } catch (Exception e) {
+            System.out.println("ERRO ao gravar o Estacionamento " + est.getNomeEstabelecimento() + "' no disco!");
+            e.printStackTrace();
+        }
+    }
 
-	@Override
-	public List<Estacionamento> getAll() {
-		List<Estacionamento> ests = new ArrayList<Estacionamento>();
-		Estacionamento est = null;
+    @Override
+    public Estacionamento get(String chave) {
+        Estacionamento est = null;
+        try (BufferedReader buffer_entrada = new BufferedReader(new FileReader("estacionamento.txt"))) {
+            String line;
+            while ((line = buffer_entrada.readLine()) != null) {
+                if (line.contains(chave)) {
+                    String[] atributos = line.split(";");
+                    est = new Estacionamento();
+                    est.setNomeEstabelecimento(atributos[0]);
+                    est.setHoraAbertura(LocalTime.parse(atributos[1]));
+                    est.setHoraFechamento(LocalTime.parse(atributos[2]));
+                    est.setQuantidadeVagas(Integer.parseInt(atributos[3]));
+                    est.setValorHora(Double.parseDouble(atributos[4]));
+                    break;
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("Erro ao recuperar estabelecimento.");
+            e.printStackTrace();
+        }
+        return est;
+    }
 
-		try (BufferedReader buffer_entrada = new BufferedReader(new FileReader("estacionamento.txt"))) {
-			String idSTR;
+    @Override
+    public List<Estacionamento> getAll() {
+        List<Estacionamento> ests = new ArrayList<>();
+        Estacionamento est;
 
-			while ((idSTR = buffer_entrada.readLine()) != null) {
-				est = new Estacionamento();
-				est.setNomeEstabelecimento(buffer_entrada.readLine());
-				est.setHoraAbertura(LocalTime.parse(buffer_entrada.readLine()));
-				est.setHoraFechamento(LocalTime.parse(buffer_entrada.readLine()));
-				est.setQuantidadeVagas(Integer.parseInt(buffer_entrada.readLine()));
-				est.setValorHora(Double.parseDouble(buffer_entrada.readLine()));
-			
-				ests.add(est);
-			}
-		} catch (Exception e) {
-			System.out.println("ERRO ao ler os Estacionamentos do disco rígido!");
-			e.printStackTrace();
-		}
-		return ests;
-	}
+        try (BufferedReader buffer_entrada = new BufferedReader(new FileReader("estacionamento.txt"))) {
 
-	@Override
-	public void update(Estacionamento est) {
-		List<Estacionamento> ests = new ArrayList();
-		ests.add(est);
-		saveToFile(ests);
-	}
-	
-	@Override
-	public void delete(Estacionamento est) {
-		System.out.println("Nao e possivel deletar o estacionamento");
-	}
+            String line;
+            while ((line = buffer_entrada.readLine()) != null) {
+                String[] atributos = line.split(";");
+                est = new Estacionamento();
+                est.setNomeEstabelecimento(atributos[0]);
+                est.setHoraAbertura(LocalTime.parse(atributos[1]));
+                est.setHoraFechamento(LocalTime.parse(atributos[2]));
+                est.setQuantidadeVagas(Integer.parseInt(atributos[3]));
+                est.setValorHora(Double.parseDouble(atributos[4]));
+                ests.add(est);
+            }
+        } catch (Exception e) {
+            System.out.println("ERRO ao ler os Estacionamentos do disco r�gido!");
+            e.printStackTrace();
+        }
 
-	private void saveToFile(List<Estacionamento> ests) {
-		try (BufferedWriter buffer_saida = new BufferedWriter(new FileWriter("estacionamento.txt", false))) {
+        return ests;
+    }
 
-			String separadorDeLinha = System.getProperty("line.separator");
-			for (Estacionamento est : ests) {
-				buffer_saida.write(est.getNomeEstabelecimento() + separadorDeLinha);
-				buffer_saida.write(est.getHoraAbertura() + separadorDeLinha);
-				buffer_saida.write(est.getHoraFechamento() + separadorDeLinha);
-				buffer_saida.write(est.getQuantidadeVagas() + separadorDeLinha);
-				buffer_saida.write(est.getEstadaList() + separadorDeLinha);
-				buffer_saida.write(est.getValorHora() + separadorDeLinha);
-			
-				buffer_saida.flush();
+    @Override
+    public void update(Estacionamento n) {
 
-			}
-		} catch (Exception e) {
-			System.out.println("ERRO ao gravar a Estacionamento no disco");
-			e.printStackTrace();
-		}
-	}
+            List<Estacionamento> ests = getAll();
+            int index = ests.indexOf(n);
+            System.out.println(index);
+            if (index != -1) {
+                ests.set(index, n);
+            }
+            saveToFile(ests);
 
+    }
+
+    @Override
+    public void delete(Estacionamento est) {
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Deseja realmente excluir? " + est + "\nDigitar 1 para confirmar");
+        int op = sc.nextInt();
+        if (op == 1) {
+            List<Estacionamento> ests = getAll();
+            for (int i = 0; i < ests.size(); i++) {
+                if (ests.get(i).equals(est)) {
+                    ests.remove(i);
+                    break;
+                }
+            }
+            saveToFile(ests);
+        }
+    }
+
+    private void saveToFile(List<Estacionamento> ests) {
+        try (BufferedWriter buffer_saida = new BufferedWriter(new FileWriter("estacionamento.txt", false))) {
+            for (Estacionamento est : ests) {
+                DateTimeFormatter formater = DateTimeFormatter.ofPattern("HH:mm");
+                buffer_saida.write(est.getNomeEstabelecimento() + ";");
+                buffer_saida.write(est.getHoraAbertura() + ";");
+                buffer_saida.write(est.getHoraFechamento() + ";");
+                buffer_saida.write(est.getQuantidadeVagas() + ";");
+                buffer_saida.write(est.getValorHora() + ";");
+                buffer_saida.newLine();
+                buffer_saida.flush();
+            }
+        } catch (Exception e) {
+            System.out.println("ERRO ao gravar a Estacionamento no disco");
+            e.printStackTrace();
+        }
+    }
 }

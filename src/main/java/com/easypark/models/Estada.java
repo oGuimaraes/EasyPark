@@ -1,20 +1,21 @@
 package com.easypark.models;
-import java.time.Duration;
+
+import java.text.DecimalFormat;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class Estada {
-
-	private static int numEstada = 0;
     private LocalDateTime dataEntrada;
-    private LocalDateTime dataSaida;
     private LocalTime horaEntrada;
-    private LocalTime horaSaida;
     private Veiculo veiculo;
-    private LocalTime tempoDePermanencia;
+    private LocalDateTime dataSaida;
+    private LocalTime horaSaida;
+    private long tempoDePermanencia;
     private Double valorEstada;
 
     public Estada(LocalDateTime dataEntrada, LocalTime horaEntrada, Veiculo veiculo) {
@@ -22,80 +23,54 @@ public class Estada {
         this.horaEntrada = horaEntrada;
         this.veiculo = veiculo;
     }
-    
-    
-    public Estada(LocalDateTime dataEntrada, LocalDateTime dataSaida, LocalTime horaEntrada, LocalTime horaSaida,
-			Veiculo veiculo, LocalTime tempoDePermanencia, Double valorEstada, int sizeEstada) {
-		this.dataEntrada = dataEntrada;
-		this.dataSaida = dataSaida;
-		this.horaEntrada = horaEntrada;
-		this.horaSaida = horaSaida;
-		this.veiculo = veiculo;
-		this.tempoDePermanencia = tempoDePermanencia;
-		this.valorEstada = valorEstada;
-		this.numEstada = sizeEstada;
-	}
 
-	public Estada() {
-	}
-	
-
-	public static int getNumEstada() {
-		return numEstada;
-	}
-
-
-	public static void setNumEstada(int numEstada) {
-		Estada.numEstada = numEstada;
-	}
-
-
-	public Map<String, Object> saidaVeiculo(Estacionamento estacionamento, String placa) {
-    	Map<String, Object> infoSaidaVeiculo = new HashMap<>();
-    	Estada estadaVeiculo = estacionamento.getEstadaVeiculo(placa);
-    	
-    	estadaVeiculo.setDataSaida(LocalDateTime.now());
-    	estadaVeiculo.setHoraSaida(LocalTime.now().plusHours(2));
-    	    	
-    	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
-    	
-    	System.out.println("HoraEntrada:" + estadaVeiculo.getHoraEntrada());
-    	System.out.println("HoraSaida:" + estadaVeiculo.getHoraSaida());
-    	
-    	Duration diferenca = Duration.between(estadaVeiculo.getHoraEntrada(), estadaVeiculo.getHoraSaida());
-    	LocalTime localTimeDiferenca = LocalTime.ofNanoOfDay(diferenca.toNanos());
-    	
-    	StringBuilder tempoPermanecido = new StringBuilder();
-    	tempoPermanecido.append(localTimeDiferenca.getHour() + ":" + localTimeDiferenca.getMinute()).toString();
-    	
-    	//View
-    	infoSaidaVeiculo.put("tempoPermanecido", tempoPermanecido);
-    	infoSaidaVeiculo.put("dataHoraEntrada", estadaVeiculo.getDataEntrada().format(formatter));
-    	infoSaidaVeiculo.put("dataHoraSaida", estadaVeiculo.getDataSaida().format(formatter));
-    	infoSaidaVeiculo.put("tipoVeiculo", estadaVeiculo.getVeiculo().getTipoVeiculo());
-    	
-    	//Calculo valor
-    	infoSaidaVeiculo.put("horasPermanecidas", localTimeDiferenca.getHour());
-    	infoSaidaVeiculo.put("minutosPermanecidos", localTimeDiferenca.getMinute());
-    	
-    	System.out.println("Hora: " + localTimeDiferenca.getHour());
-    	System.out.println("Minutos: " + localTimeDiferenca.getMinute());
-    	
-    	estacionamento.getEstadaList().remove(placa);
-
-		return infoSaidaVeiculo;
+    public Estada(LocalDateTime dataEntrada, LocalTime horaEntrada, Veiculo veiculo, LocalDateTime dataSaida, LocalTime horaSaida,
+                  long tempoDePermanencia, Double valorEstada) {
+        this.dataEntrada = dataEntrada;
+        this.veiculo = veiculo;
+        this.horaEntrada = horaEntrada;
+        this.dataSaida = dataSaida;
+        this.horaSaida = horaSaida;
+        this.tempoDePermanencia = tempoDePermanencia;
+        this.valorEstada = valorEstada;
     }
 
+    public Estada() {
+    }
 
-//
-//	sb.append("Placa: ").append(placaVeiculo).append("\n").append("Data/hora de chegada: ")
-//			.append(saida.getDataEntrada().format(formatter)).append("\n>").append("Data/hora de saida: ")
-//			.append(saida.getDataSaida().format(formatter)).append("<\n").append("Tempo permanecido: ")
-//			.append(localTimeDiferenca.getHour() + ":" + localTimeDiferenca.getMinute()).append("\n")
-//			.append("Valor a pagar: R$").append(valorAPagar).append("\n");
-//
-//	return sb;
-//}
+    public Map<String, Object> saidaVeiculo(Estacionamento estacionamento, String placa) {
+
+
+        Map<String, Object> infoSaidaVeiculo = new HashMap<>();
+        Estada estadaVeiculo = estacionamento.getEstadaVeiculo(placa);
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/uuuu HH:mm");
+        estadaVeiculo.setDataSaida(LocalDateTime.now());
+        estadaVeiculo.setHoraSaida(LocalTime.now().plusHours(2));
+
+        long minutosPermanecidos = estadaVeiculo.getHoraEntrada().until(estadaVeiculo.getHoraSaida(), ChronoUnit.MINUTES);
+        estadaVeiculo.setTempoDePermanencia(minutosPermanecidos);
+        long horasPermanecidas = 0;
+        while (minutosPermanecidos > 59) {
+            minutosPermanecidos -= 60;
+            horasPermanecidas++;
+        }
+        estadaVeiculo.calculaValor(horasPermanecidas, minutosPermanecidos, estacionamento.getValorHora());
+        LocalTime tempoPermanecido = LocalTime.of((int) horasPermanecidas,(int) minutosPermanecidos);
+
+        //View
+        infoSaidaVeiculo.put("tempoPermanecido", tempoPermanecido);
+        infoSaidaVeiculo.put("dataHoraEntrada", estadaVeiculo.getDataEntrada().format(formatter));
+        infoSaidaVeiculo.put("dataHoraSaida", estadaVeiculo.getDataSaida().format(formatter));
+        infoSaidaVeiculo.put("tipoVeiculo", estadaVeiculo.getVeiculo().getTipoVeiculo());
+        infoSaidaVeiculo.put("valorAPagar", estadaVeiculo.getValorEstada());
+
+        estacionamento.getEstadaList().remove(placa);
+        EstadaDAO estadaDAO = new EstadaDAO();
+        estadaDAO.update(estadaVeiculo);
+
+        return infoSaidaVeiculo;
+    }
 
 
     public LocalTime getHoraEntrada() {
@@ -127,36 +102,37 @@ public class Estada {
     }
 
     public void setValorEstada(Double valorEstada) {
+        DecimalFormat formato = new DecimalFormat("#.##");
+        valorEstada = Double.valueOf(formato.format(valorEstada).replace(",", "."));
         this.valorEstada = valorEstada;
     }
 
-    public String calcTempo() {
+//    public String calcTempo() {
+//
+//        int year = (getDataSaida().getYear()) - (getDataEntrada().getYear());
+//        int month = (getDataSaida().getMonthValue()) - (getDataEntrada().getMonthValue());
+//        int day = (getDataSaida().getDayOfMonth()) - (getDataEntrada().getDayOfMonth());
+//        int hour = (getDataSaida().getHour()) - (getDataEntrada().getHour());
+//        int minute = (getDataSaida().getMinute()) - (getDataEntrada().getMinute());
+//
+//        return "" + year + "/" + month + "/" + day + " " + hour + ":" + minute;
+//
+//    }
 
-        int year = (getDataSaida().getYear()) - (getDataEntrada().getYear());
-        int month = (getDataSaida().getMonthValue()) - (getDataEntrada().getMonthValue());
-        int day = (getDataSaida().getDayOfMonth()) - (getDataEntrada().getDayOfMonth());
-        int hour = (getDataSaida().getHour()) - (getDataEntrada().getHour());
-        int minute = (getDataSaida().getMinute()) - (getDataEntrada().getMinute());
-
-        return "" + year + "/" + month + "/" + day + " " + hour + ":" + minute;
-
+    public void calculaValor(long horasPermanecidas, long minutosPermanecidos, Double valorHora) {
+        Double valorAPagar;
+        Double valorHoraSemMinutos = (valorHora * horasPermanecidas);
+        Double valorMinutos = ((valorHora / 60) * minutosPermanecidos);
+        valorAPagar = valorHoraSemMinutos + valorMinutos;
+        setValorEstada(valorAPagar);
+        this.valorEstada = valorAPagar;
     }
-    
-	public void calculaValor(int horasPermanecidas, int minutosPermanecidos, Double valorHora) {
-		Double valorAPagar;
-		System.out.println("ValHora" + valorHora);
-		System.out.println("horasPermanecidas" + horasPermanecidas);
-		Double valorHoraSemMinutos = (double) (valorHora * horasPermanecidas);
-		Double valorMinutos = (double) ((valorHora / 60) * minutosPermanecidos);
-		valorAPagar = valorHoraSemMinutos + valorMinutos;
-		this.valorEstada = valorAPagar;
-	}
 
-    public LocalTime getTempoDePermanencia() {
+    public long getTempoDePermanencia() {
         return tempoDePermanencia;
     }
 
-    public void setTempoDePermanencia(LocalTime tempoDePermanencia) {
+    public void setTempoDePermanencia(long tempoDePermanencia) {
         this.tempoDePermanencia = tempoDePermanencia;
     }
 
@@ -168,27 +144,33 @@ public class Estada {
         this.dataEntrada = dataEntrada;
     }
 
-//    @Override
-//	public String toString() {
-//		return "Estada " + numEstada + "[dataEntrada=" + dataEntrada +  ", dataSaida=" + dataSaida + ", horaEntrada=" + horaEntrada
-//				+ ", horaSaida=" + horaSaida + ", veiculo=" + veiculo + ", tempoDePermanencia=" + tempoDePermanencia
-//				+ ", valorEstada=" + valorEstada + "]";
-//	}
-    
-    
 
-
-	public LocalDateTime getDataSaida() {
-        return dataSaida;
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(this.dataEntrada).append("/").append(this.horaEntrada).append("/")
+                .append(this.veiculo.getPlaca()).append("/").append(this.veiculo.getTipoVeiculo()).append("/");
+        if (this.getDataSaida() != null) {
+            sb.append(this.dataSaida).append("/").append(this.horaSaida).append("/")
+                    .append(this.tempoDePermanencia).append("/").append(this.valorEstada);
+        }
+        return sb.toString();
     }
 
     @Override
-	public String toString() {
-		return "Estada [veiculo=" + veiculo + "]";
-	}
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Estada estada = (Estada) o;
+        return Objects.equals(veiculo.getPlaca(), estada.veiculo.getPlaca());
+    }
 
 
-	public void setDataSaida(LocalDateTime dataSaida) {
+    public LocalDateTime getDataSaida() {
+        return dataSaida;
+    }
+
+    public void setDataSaida(LocalDateTime dataSaida) {
         this.dataSaida = dataSaida;
     }
 

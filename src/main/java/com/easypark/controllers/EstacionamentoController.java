@@ -25,13 +25,11 @@ import com.easypark.models.*;
 
 @Controller
 public class EstacionamentoController {
-
-	private Estacionamento estacionamentoModel = new Estacionamento();
-
-	private EstadaDAO estadaDAO = new EstadaDAO();
 	private EstacionamentoDAO estacionamentoDAO = new EstacionamentoDAO();
+	private Estacionamento estacionamentoModel = new Estacionamento();
+	private EstadaDAO estadaDAO = new EstadaDAO();
 
-	public static void criaArquivo() {
+	private static void criaArquivo() {
 		File f = new File("estada.txt");
 		if (f.exists())
 			f.delete();
@@ -43,8 +41,8 @@ public class EstacionamentoController {
 	@RequestMapping("/index")
 	public String paginaInicial() {
 		
-		estacionamentoModel.setNomeEstabelecimento("LINDO");
-		estacionamentoDAO.update(estacionamentoModel);
+		estacionamentoModel.setNomeEstabelecimento("tchutchuca");
+
 		System.out.println(estacionamentoModel.toString());
 		return "index";
 	}
@@ -106,14 +104,12 @@ public class EstacionamentoController {
 		String placaN = (String) infoEntradaVeiculo.get("placaVeiculo");
 		String tipoVeiculoN = (String) infoEntradaVeiculo.get("tipoVeiculo");
 		LocalDateTime dataEntradaN = (LocalDateTime) infoEntradaVeiculo.get("dataEntrada");
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/uuuu HH:mm");
 		modelAndView.addObject("placaVeiculo", placaN);
 		modelAndView.addObject("tipoVeiculo", tipoVeiculoN);
 		modelAndView.addObject("dataEntrada", dataEntradaN.format(formatter));
 
-		estadaDAO.add((Estada) infoEntradaVeiculo.get("novaEstada"));
 
-		System.out.println((Estada) infoEntradaVeiculo.get("novaEstada"));
 
 		return modelAndView;
 	}
@@ -128,27 +124,18 @@ public class EstacionamentoController {
 	public ModelAndView veiculoEstacionado(@RequestParam("placa") String placaVeiculoSaindo) {
 		ModelAndView modelAndView = new ModelAndView("veiculoSaindo");
 		Map<String, Estada> mapEstada = estacionamentoModel.getEstadaList();
-
 		Estada estadaVeiculo = mapEstada.get(placaVeiculoSaindo);
-
 		Map<String, Object> informacoesSaida = estadaVeiculo.saidaVeiculo(estacionamentoModel, placaVeiculoSaindo);
-
 		modelAndView.addObject("placaVeiculo", placaVeiculoSaindo);
 		modelAndView.addObject("tempoPermanecido", informacoesSaida.get("tempoPermanecido"));
 		modelAndView.addObject("dataHoraEntrada", informacoesSaida.get("dataHoraEntrada"));
 		modelAndView.addObject("dataHoraSaida", informacoesSaida.get("dataHoraSaida"));
 		modelAndView.addObject("tipoVeiculo", informacoesSaida.get("tipoVeiculo"));
+		modelAndView.addObject("valorAPagar", informacoesSaida.get("valorAPagar"));
 
-		int minutosPermanecidos = (int) informacoesSaida.get("minutosPermanecidos");
-		int horasPermanecidas = (int) informacoesSaida.get("horasPermanecidas");
+		System.out.println("Imprimindo estada que sera excluida"+estadaVeiculo);
 
-		Double valorHora = estacionamentoModel.getValorHora();
-		estadaVeiculo.calculaValor(horasPermanecidas, minutosPermanecidos, valorHora);
 
-		modelAndView.addObject("valorAPagar", estadaVeiculo.getValorEstada());
-
-		estadaVeiculo.setValorEstada(24.0);
-		System.out.println(estadaVeiculo);
 		estadaDAO.delete(estadaVeiculo);
 
 		return modelAndView;

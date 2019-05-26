@@ -1,17 +1,14 @@
 package com.easypark.models;
 
-import java.time.Duration;
+
+
+import org.springframework.stereotype.Component;
+
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
-	import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.HashMap;
 
-import org.springframework.context.annotation.Configuration;
-import org.springframework.stereotype.Component;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
+import java.util.Map;
 
 @Component
 public class Estacionamento {
@@ -24,15 +21,15 @@ public class Estacionamento {
 	private Double valorHora;
 	private Double valorAPagar;
 
-    public Estacionamento(String nomeEstabelecimento, LocalTime horaAbertura, LocalTime horaFechamento, int quantidadeVagas, Double valorHora) {
-        this.nomeEstabelecimento = nomeEstabelecimento;
-        this.horaAbertura = horaAbertura;
-        this.horaFechamento = horaFechamento;
-        this.quantidadeVagas = quantidadeVagas;
-        this.valorHora = valorHora;
-        this.estadaList = new HashMap<>();
-    }
-	
+	public Estacionamento(String nomeEstabelecimento, LocalTime horaAbertura, LocalTime horaFechamento, int quantidadeVagas, Double valorHora) {
+		this.nomeEstabelecimento = nomeEstabelecimento;
+		this.horaAbertura = horaAbertura;
+		this.horaFechamento = horaFechamento;
+		this.quantidadeVagas = quantidadeVagas;
+		this.valorHora = valorHora;
+		this.estadaList = new HashMap<>();
+	}
+
 	public Estacionamento() {
 		this.estadaList = new HashMap<>();
 	}
@@ -88,64 +85,80 @@ public class Estacionamento {
 	public int calcQtdeVagasLivres() {
 		return this.quantidadeVagas - this.qtdVeiculosEstacionados;
 	}
-	
+
 	@Override
 	public String toString() {
 
 		StringBuilder sb = new StringBuilder();
-		sb.append("Nome: ").append(this.getNomeEstabelecimento()).append("\n").append("Hora de abertura: ")
-				.append(this.horaAbertura).append("\n").append("Hora de fechamento: ").append(this.horaFechamento)
-				.append("\n").append("Quantidade de vagas: ").append("\n").append(this.getQuantidadeVagas())
-				.append("Valor Hora: ").append(this.getValorHora()).append("\n").append("Estada List:").append(this.getEstadaList()).toString();
+		sb.append(this.getNomeEstabelecimento()).append(";").append(this.horaAbertura).append(";")
+				.append(this.horaFechamento).append(";").append(this.getQuantidadeVagas()).append(";")
+				.append(this.getValorHora()).append(";").append(this.getEstadaList()).toString();
 		return sb.toString();
 	}
 
-	StringBuilder sb = new StringBuilder();
-	
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		Estacionamento that = (Estacionamento) o;
+
+		return nomeEstabelecimento.equals(that.nomeEstabelecimento);
+
+	}
+
+
+
+	//StringBuilder sb = new StringBuilder();
+
 	public Map<String, Object> entradaVeiculo(Veiculo veiculo) {
-		Map<String,Object> infoEntradaVeiculo = new HashMap<String,Object>();
-		
+		Map<String,Object> infoEntradaVeiculo = new HashMap<>();
+
 		if (this.estadaList == null) {
 			this.estadaList = new HashMap<>();
 		}
-		
-		/* Formatação String to DateTime */
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
-		String strDataEntrada = LocalDateTime.now().format(formatter);
-		LocalDateTime dataEntrada = LocalDateTime.parse(strDataEntrada, formatter);
-		
+
+		/* Formata��o String to DateTime */
+
+		LocalDateTime dataEntrada = LocalDateTime.now();
 		LocalTime horaEntrada = LocalTime.now();
-				
-    	Estada novaEstada = new Estada(dataEntrada, LocalDateTime.MIN, 
-    			horaEntrada, LocalTime.MIN, veiculo, LocalTime.MIN,  0.0, this.estadaList.size()); 
+
+		Estada novaEstada = new Estada(dataEntrada, horaEntrada,veiculo);
 
 		this.getEstadaList().put(veiculo.getPlaca(), novaEstada);
 
 		estadaList.put(novaEstada.getVeiculo().getPlaca(), novaEstada);
 		System.out.println("Veiculos Estacionados"+this.getEstadaList());
+
 		infoEntradaVeiculo.put("placaVeiculo", veiculo.getPlaca());
 		infoEntradaVeiculo.put("tipoVeiculo", veiculo.getTipoVeiculo());
 		infoEntradaVeiculo.put("dataEntrada", dataEntrada);
+		infoEntradaVeiculo.put("horaEntrada", horaEntrada);
 		infoEntradaVeiculo.put("novaEstada", novaEstada);
-		
+
+		System.out.println("Exibindo estada no momento da insercao inicial"+novaEstada);
+
+		EstadaDAO estadaDAO = new EstadaDAO();
+		estadaDAO.add(novaEstada);
+
 		return infoEntradaVeiculo;
 	}
-	
+
 	public void calculaValor(int horasPermanecidas, int minutosPermanecidos) {
 		Double valorAPagar;
 		System.out.println("Valor hora:" + this.getValorHora());
-		Double valorHoraSemMinutos = (double) (this.getValorHora() * horasPermanecidas);
-		Double valorMinutos = (double) ((this.getValorHora() / 60) * minutosPermanecidos);
+		Double valorHoraSemMinutos =  this.getValorHora() * horasPermanecidas;
+		Double valorMinutos = (this.getValorHora() / 60) * minutosPermanecidos;
 		valorAPagar = valorHoraSemMinutos + valorMinutos;
 		this.setValorAPagar(valorAPagar);
 	}
-	
 
-	
+
+
 	public Map<String, Estada> getEstadaList() {
 		return estadaList;
 	}
-	
+
 	public Estada getEstadaVeiculo(String placa) {
 		return this.estadaList.get(placa);
 	}

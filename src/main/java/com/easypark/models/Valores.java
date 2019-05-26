@@ -1,6 +1,6 @@
 package com.easypark.models;
 
-import javax.swing.*;
+
 
 public class Valores {
 
