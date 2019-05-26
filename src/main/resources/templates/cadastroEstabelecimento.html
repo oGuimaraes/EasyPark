@@ -48,7 +48,7 @@
 				<li><a href="saidaVeiculo" class="button">Saída de Veículo</a></li>
 				<li><a href="#">Relatórios</a>
 					<ul>
-						<li><a href="#">Relatório 1</a></li>
+						<li><a href="relatorio1">Relatório 1</a></li>
 						<li><a href="#">Relatório 2</a></li>
 						<li><a href="#">Relatório 3</a></li>
 					</ul></li>
@@ -60,30 +60,30 @@
 			<form method="post" th:object="${estacionamento}">
 				<h2 class="titulo">Informações do Estacionamento</h2>
 				<div class="group">
-					<input type="text" name="nomeEstabelecimento" th:field="*{nomeEstabelecimento}" required> <span
+					<input class="input-text" type="text" name="nomeEstabelecimento" th:field="*{nomeEstabelecimento}" required> <span
 						class="highlight"></span> <span class="bar"></span> <label>Nome do Estabelecimento</label>
 				</div>
 
 				<div class="group">
-					<input type="time" name="horaAbertura" th:field="*{horaAbertura}"
+					<input class="input-text" type="time" name="horaAbertura" th:field="*{horaAbertura}"
 						required> <span class="highlight"></span> <span
 						class="bar"></span> <label>Horário de Abertura</label>
 				</div>
 
 				<div class="group">
-					<input type="time" name="horaFechamento" th:field="*{horaFechamento}" required> <span
+					<input class="input-text" type="time" name="horaFechamento" th:field="*{horaFechamento}" required> <span
 						class="highlight"></span> <span class="bar"></span> <label>Horário
 						de Fechamento</label>
 				</div>
 
 				<div class="group">
-					<input type="number" name="quantidadeVagas" th:field="*{quantidadeVagas}" required> <span
+					<input class="input-text" type="number" name="quantidadeVagas" th:field="*{quantidadeVagas}" required> <span
 						class="highlight"></span> <span class="bar"></span> <label>Quantidade
 						Vagas</label>
 				</div>
 
 				<div class="group">
-					<input type="number" min="0.1" max="1000.00" step="0.1" th:field="*{valorHora}" name="valorHora" required> <span
+					<input class="input-text" type="number" min="0.1" max="1000.00" step="0.1" th:field="*{valorHora}" name="valorHora" required> <span
 						class="highlight"></span> <span class="bar"></span> <label>Valor
 						Hora</label>
 				</div>

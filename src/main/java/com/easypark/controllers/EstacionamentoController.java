@@ -139,5 +139,24 @@ public class EstacionamentoController {
 	public String saidaVeiculo() {
 		return "saidaVeiculo";
 	}
+	
+//	@PostMapping("/relatorio1")
+////	public ModelAndView veiculoEstacionado(@ModelAttribute Veiculo veiculo) {
+////
+////		ModelAndView modelAndView = new ModelAndView("veiculoEstacionado");
+////		Map<String, Object> infoEntradaVeiculo = estacionamentoModel.entradaVeiculo(veiculo);
+////
+////		String placaN = (String) infoEntradaVeiculo.get("placaVeiculo");
+////		String tipoVeiculoN = (String) infoEntradaVeiculo.get("tipoVeiculo");
+////		LocalDateTime dataEntradaN = (LocalDateTime) infoEntradaVeiculo.get("dataEntrada");
+////		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/uuuu HH:mm");
+////		modelAndView.addObject("placaVeiculo", placaN);
+////		modelAndView.addObject("tipoVeiculo", tipoVeiculoN);
+////		modelAndView.addObject("dataEntrada", dataEntradaN.format(formatter));
+////
+////
+////
+////		return modelAndView;
+//	}
 
 }

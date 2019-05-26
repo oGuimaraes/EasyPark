@@ -61,18 +61,25 @@
 				<h2 class="titulo">Entrada de Veículo</h2>
 				
 				<div class="group">
-					<input type="text" name="placa" th:field="*{placa}" required> <span
+					<input class="input-text" type="text" name="placa" th:field="*{placa}" required> <span
 						class="highlight"></span> <span class="bar"></span> <label>Placa do veículo</label>
 				</div>
 
-				<div class="group">
-					<input type="text" name="tipoVeiculo"  th:field="*{tipoVeiculo}"
-						required> <span class="highlight"></span> <span
-						class="bar"></span> <label>Veículo</label>
+				<div class="input-radios">
+				
+					<h2 class="titulo">Tipo do veículo</h2>
+			
+					<span>Carro</span>
+					<input class="input-radio" type="radio" name="tipoVeiculo" value="Carro" th:field="*{tipoVeiculo}" CHECKED>
+
+					<span>Moto</span>
+					<input type="radio" name="tipoVeiculo" value="Moto" th:field="*{tipoVeiculo}">
+				
+					<span>Caminhonete</span>
+					<input type="radio" name="tipoVeiculo" value="Caminhonete" th:field="*{tipoVeiculo}">
 				</div>
-
-
-				<button type="submit" class="btn-form" value="entrada">Entrada</button>
+				
+				<button type="submit" class="btn-form btn" value="entrada">Entrada</button>
 			</form>
 
 </body>

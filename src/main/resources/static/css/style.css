@@ -196,13 +196,37 @@ ul {list-style: none;}
     margin-bottom: 35px;
 }
 
+.aplicacao .input-radios .titulo {
+    font-size: 14px;
+    font-weight: 400;
+    color: #37992a;
+    margin-left: 5px;
+    margin-bottom: 10px;
+}
+
+.aplicacao .input-radios span {
+    margin-left: 5px;
+    font-size: 14px;
+    color: #7b7b7b;
+}
+
+.aplicacao .input-radios input {
+    margin-right: 25px;
+    margin-left: 3px;
+}
+
+.aplicacao .btn {
+    margin-top: 20px;
+}
+
 /* Input */
 
 .group 			  { 
   position:relative; 
   margin-bottom:32px; 
 }
-input 				{
+
+.input-text{
   font-size:14px;
   padding:5px 5px 5px 3px;
   display:block;
@@ -212,7 +236,7 @@ input 				{
   background-color: #f0f0f0;
   z-index: -1;
 }
-input:focus 		{ outline:none; }
+.input-text:focus 		{ outline:none; }
 
 /* LABEL ======================================= */
 label 				 {
@@ -229,10 +253,10 @@ label 				 {
 }
 
 /* active state */
-input:focus ~ label, input:valid ~ label 		{
+.input-text:focus ~ label, input:valid ~ label 		{
   top:-20px;
   font-size:14px;
-  color:rgb(55, 153, 42);
+  color:#37992a;
 }
 
 /* BOTTOM BARS ================================= */
@@ -256,7 +280,7 @@ input:focus ~ label, input:valid ~ label 		{
 }
 
 /* active state */
-input:focus ~ .bar:before, input:focus ~ .bar:after {
+.input-text:focus ~ .bar:before, input:focus ~ .bar:after {
   width:50%;
 }
 
@@ -272,7 +296,7 @@ input:focus ~ .bar:before, input:focus ~ .bar:after {
 }
 
 /* active state */
-input:focus ~ .highlight {
+.input-text:focus ~ .highlight {
   -webkit-animation:inputHighlighter 0.3s ease;
   -moz-animation:inputHighlighter 0.3s ease;
   animation:inputHighlighter 0.3s ease;
@@ -287,3 +311,5 @@ input:focus ~ .highlight {
     font-size: 16px;
     box-shadow: 2px 2px 5px #cccccc;
 }
+
+
