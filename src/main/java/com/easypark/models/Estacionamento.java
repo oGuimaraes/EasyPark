@@ -17,7 +17,7 @@ public class Estacionamento {
 	private LocalTime horaFechamento;
 	private int quantidadeVagas;
 	private int qtdVeiculosEstacionados;
-	private Map<String, Estada> estadaList;
+	private Map<String, Estada> mapEstadasAtual;
 	private Double valorHora;
 	private Double valorAPagar;
 
@@ -27,11 +27,11 @@ public class Estacionamento {
 		this.horaFechamento = horaFechamento;
 		this.quantidadeVagas = quantidadeVagas;
 		this.valorHora = valorHora;
-		this.estadaList = new HashMap<>();
+		this.mapEstadasAtual = new HashMap<>();
 	}
 
 	public Estacionamento() {
-		this.estadaList = new HashMap<>();
+		this.mapEstadasAtual = new HashMap<>();
 	}
 
 	public String getNomeEstabelecimento() {
@@ -114,8 +114,8 @@ public class Estacionamento {
 	public Map<String, Object> entradaVeiculo(Veiculo veiculo) {
 		Map<String,Object> infoEntradaVeiculo = new HashMap<>();
 
-		if (this.estadaList == null) {
-			this.estadaList = new HashMap<>();
+		if (this.mapEstadasAtual == null) {
+			this.mapEstadasAtual = new HashMap<>();
 		}
 
 		/* Formata��o String to DateTime */
@@ -127,7 +127,7 @@ public class Estacionamento {
 
 		this.getEstadaList().put(veiculo.getPlaca(), novaEstada);
 
-		estadaList.put(novaEstada.getVeiculo().getPlaca(), novaEstada);
+		mapEstadasAtual.put(novaEstada.getVeiculo().getPlaca(), novaEstada);
 		System.out.println("Veiculos Estacionados"+this.getEstadaList());
 
 		infoEntradaVeiculo.put("placaVeiculo", veiculo.getPlaca());
@@ -156,15 +156,15 @@ public class Estacionamento {
 
 
 	public Map<String, Estada> getEstadaList() {
-		return estadaList;
+		return mapEstadasAtual;
 	}
 
 	public Estada getEstadaVeiculo(String placa) {
-		return this.estadaList.get(placa);
+		return this.mapEstadasAtual.get(placa);
 	}
 
 	public void setEstadaList(Map<String, Estada> estadaList) {
-		this.estadaList = estadaList;
+		this.mapEstadasAtual = estadaList;
 	}
 
 	public Double getValorAPagar() {

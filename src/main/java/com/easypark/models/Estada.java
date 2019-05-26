@@ -175,4 +175,9 @@ public class Estada {
     }
 
 
+//    @Override
+//    public boolean test(Estada estada) {
+//
+//        return (estada) -> estada.getTempoDePermanencia() > 120;
+//    }
 }
