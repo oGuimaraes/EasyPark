@@ -45,6 +45,10 @@ public class EstacionamentoController {
 	public ModelAndView informacoes(Estacionamento estacionamento) {
 		ModelAndView mv = new ModelAndView("cadastroEstabelecimento");
 		mv.addObject("nomeEstabelecimentoInfo", estacionamentoModel.getNomeEstabelecimento());
+		mv.addObject("horaAberturaInfo", estacionamentoModel.getHoraAbertura());
+		mv.addObject("horaFechamentoInfo", estacionamentoModel.getHoraFechamento());
+		mv.addObject("quantidadeVagasInfo", estacionamentoModel.getQuantidadeVagas());
+		mv.addObject("precoInfo", estacionamentoModel.getValorHora());
 		return mv;
 	}
 
@@ -84,9 +88,16 @@ public class EstacionamentoController {
 	}
 
 	@GetMapping("/entradaVeiculo")
-	public String entradaForm(Model model) {
+	public ModelAndView entradaForm(Model model) {
 		model.addAttribute("veiculo", new Veiculo());
-		return "entradaVeiculo";
+		ModelAndView modelAndView = new ModelAndView("entradaVeiculo");
+		modelAndView.addObject("nomeEstabelecimentoInfo", estacionamentoModel.getNomeEstabelecimento());
+		modelAndView.addObject("horaAberturaInfo", estacionamentoModel.getHoraAbertura());
+		modelAndView.addObject("horaFechamentoInfo", estacionamentoModel.getHoraFechamento());
+		modelAndView.addObject("quantidadeVagasInfo", estacionamentoModel.getQuantidadeVagas());
+		modelAndView.addObject("precoInfo", estacionamentoModel.getValorHora());
+		return modelAndView;
+		
 	}
 
 	@PostMapping("/entradaVeiculo")
@@ -102,14 +113,25 @@ public class EstacionamentoController {
 		modelAndView.addObject("placaVeiculo", placaN);
 		modelAndView.addObject("tipoVeiculo", tipoVeiculoN);
 		modelAndView.addObject("dataEntrada", dataEntradaN.format(formatter));
+		modelAndView.addObject("nomeEstabelecimentoInfo", estacionamentoModel.getNomeEstabelecimento());
+		modelAndView.addObject("horaAberturaInfo", estacionamentoModel.getHoraAbertura());
+		modelAndView.addObject("horaFechamentoInfo", estacionamentoModel.getHoraFechamento());
+		modelAndView.addObject("quantidadeVagasInfo", estacionamentoModel.getQuantidadeVagas());
+		modelAndView.addObject("precoInfo", estacionamentoModel.getValorHora());
 
 		return modelAndView;
 	}
 
 	@GetMapping("/saidaVeiculo")
-	public String saidaForm(Model model) {
+	public ModelAndView saidaForm(Model model) {
+		ModelAndView modelAndView = new ModelAndView("veiculoSaindo");
+		modelAndView.addObject("nomeEstabelecimentoInfo", estacionamentoModel.getNomeEstabelecimento());
+		modelAndView.addObject("horaAberturaInfo", estacionamentoModel.getHoraAbertura());
+		modelAndView.addObject("horaFechamentoInfo", estacionamentoModel.getHoraFechamento());
+		modelAndView.addObject("quantidadeVagasInfo", estacionamentoModel.getQuantidadeVagas());
+		modelAndView.addObject("precoInfo", estacionamentoModel.getValorHora());
 		model.addAttribute("veiculo", new Veiculo());
-		return "saidaVeiculo";
+		return modelAndView;
 	}
 
 	@PostMapping("/saidaVeiculo")
@@ -124,6 +146,11 @@ public class EstacionamentoController {
 		modelAndView.addObject("dataHoraSaida", informacoesSaida.get("dataHoraSaida"));
 		modelAndView.addObject("tipoVeiculo", informacoesSaida.get("tipoVeiculo"));
 		modelAndView.addObject("valorAPagar", informacoesSaida.get("valorAPagar"));
+		modelAndView.addObject("nomeEstabelecimentoInfo", estacionamentoModel.getNomeEstabelecimento());
+		modelAndView.addObject("horaAberturaInfo", estacionamentoModel.getHoraAbertura());
+		modelAndView.addObject("horaFechamentoInfo", estacionamentoModel.getHoraFechamento());
+		modelAndView.addObject("quantidadeVagasInfo", estacionamentoModel.getQuantidadeVagas());
+		modelAndView.addObject("precoInfo", estacionamentoModel.getValorHora());
 
 		System.out.println("Imprimindo estada que sera excluida" + estadaVeiculo);
 

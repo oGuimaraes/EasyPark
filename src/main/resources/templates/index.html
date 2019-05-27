@@ -49,7 +49,15 @@
                     </ul>
                 </li>
             </ul>
+            <div class="info-estacionamento">
+				<span id="nomeEstabelecimento" th:text="${nomeEstabelecimentoInfo}"></span><br>
+				<span name="horaAberturaInfo" th:text="${horaAberturaInfo}">Hora Abertura</span><br>
+				<span name="horaFechamentoInfo" th:text="${horaFechamentoInfo}">Hora Fechamento</span><br>
+				<span name="quantidadeVagasInfo" th:text="${quantidadeVagasInfo}">Quantidade de Vagas Disponiveis</span><br>
+				<span name="precoInfo" th:text="${precoInfo}">Preço Hora</span>
+			</div>
         </div>
+
         <div class="blank-space"></div>
         <div class="aplicacao">
 
