@@ -44,6 +44,7 @@ public class EstacionamentoController {
 	@RequestMapping(value = "/cadastroEstabelecimento", method = RequestMethod.GET)
 	public ModelAndView informacoes(Estacionamento estacionamento) {
 		ModelAndView mv = new ModelAndView("cadastroEstabelecimento");
+		mv.addObject("nomeEstabelecimentoInfo", estacionamentoModel.getNomeEstabelecimento());
 		return mv;
 	}
 
@@ -79,7 +80,6 @@ public class EstacionamentoController {
 		/* Printa as informações do estabelecimento instanciado no console */
 		System.out.println(estacionamentoModel.toString());
 		
-		
 		return modelAndView;
 	}
 
@@ -103,8 +103,6 @@ public class EstacionamentoController {
 		modelAndView.addObject("tipoVeiculo", tipoVeiculoN);
 		modelAndView.addObject("dataEntrada", dataEntradaN.format(formatter));
 
-
-
 		return modelAndView;
 	}
 
@@ -127,8 +125,7 @@ public class EstacionamentoController {
 		modelAndView.addObject("tipoVeiculo", informacoesSaida.get("tipoVeiculo"));
 		modelAndView.addObject("valorAPagar", informacoesSaida.get("valorAPagar"));
 
-		System.out.println("Imprimindo estada que sera excluida"+estadaVeiculo);
-
+		System.out.println("Imprimindo estada que sera excluida" + estadaVeiculo);
 
 		estadaDAO.delete(estadaVeiculo);
 
@@ -140,23 +137,4 @@ public class EstacionamentoController {
 		return "saidaVeiculo";
 	}
 	
-//	@PostMapping("/relatorio1")
-////	public ModelAndView veiculoEstacionado(@ModelAttribute Veiculo veiculo) {
-////
-////		ModelAndView modelAndView = new ModelAndView("veiculoEstacionado");
-////		Map<String, Object> infoEntradaVeiculo = estacionamentoModel.entradaVeiculo(veiculo);
-////
-////		String placaN = (String) infoEntradaVeiculo.get("placaVeiculo");
-////		String tipoVeiculoN = (String) infoEntradaVeiculo.get("tipoVeiculo");
-////		LocalDateTime dataEntradaN = (LocalDateTime) infoEntradaVeiculo.get("dataEntrada");
-////		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/uuuu HH:mm");
-////		modelAndView.addObject("placaVeiculo", placaN);
-////		modelAndView.addObject("tipoVeiculo", tipoVeiculoN);
-////		modelAndView.addObject("dataEntrada", dataEntradaN.format(formatter));
-////
-////
-////
-////		return modelAndView;
-//	}
-
 }

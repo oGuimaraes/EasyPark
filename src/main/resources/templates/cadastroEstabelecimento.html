@@ -31,7 +31,7 @@
 			<div class="menu-contents">
 				<ul>
 					<li><a href="index" class="button">Inicio</a></li>
-					<li><a href="cadastroEstabelecimento" class="button">Cadastrar Estabelecimento</a></li>
+					<li><a href="cadastroEstabelecimento" class="button">Alterar Estabelecimento</a></li>
 					<li><a href="entradaVeiculo" class="button">Entrada de Veículo</a></li>
 					<li><a href="saidaVeiculo" class="button">Saída de Veículo</a></li>
 					<li><a href="#">Relatórios</a></li>
@@ -43,17 +43,25 @@
 		<div class="menu-desktop">
 			<ul id="nav">
 				<li><a href="index" class="button">Inicio</a></li>
-				<li><a href="cadastroEstabelecimento" class="button">Cadastrar Estabelecimento</a></li>
-				<li><a href="entradaVeiculo" class="button">Entrada de Veículo</a></li>
-				<li><a href="saidaVeiculo" class="button">Saída de Veículo</a></li>
-				<li><a href="#">Relatórios</a>
+				<li><a id="setInfoEstacionamento" href="cadastroEstabelecimento" class="button">Alterar Estabelecimento</a></li>
+				<li id="v1" class="visivel"><a href="entradaVeiculo" class="button">Entrada de Veículo</a></li>
+				<li id="v2" class="visivel"><a href="saidaVeiculo" class="button">Saída de Veículo</a></li>
+				<li id="v3" class="visivel"><a href="#">Relatórios</a>
 					<ul>
-						<li><a href="relatorio1">Relatório 1</a></li>
-						<li><a href="#">Relatório 2</a></li>
-						<li><a href="#">Relatório 3</a></li>
+						<li id="v4" class="visivel"><a href="relatorio1">Relatório 1</a></li>
+						<li id="v5" class="visivel"><a href="#">Relatório 2</a></li>
+						<li id="v6" class="visivel"><a href="#">Relatório 3</a></li>
 					</ul></li>
 			</ul>
+			<div class="info-estacionamento">
+				<span id="nomeEstabelecimento" th:text="${nomeEstabelecimentoInfo}"></span>
+				<span name="horaAberturaInfo">Hora Abertura</span>
+				<span name="horaFechamentoInfo">Hora Fechamento</span>
+				<span name="quantidadeVagasInfo">Quantidade de Vagas Disponiveis</span>
+				<span name="precoInfo">Preço Hora</span>
+			</div>
 		</div>
+
 		<div class="blank-space"></div>
 		<div class="aplicacao">
 
@@ -90,10 +98,10 @@
 
 				<button type="submit" class="btn-form" value="cadastrar">Cadastrar</button>
 			</form>
-
 </body>
-
-
+<script th:src="@{/javascript/main.js}"></script>
+<script th:src="@{/javascript/main.js}"></script>
+<script th:src="@{/javascript/main.js}"></script>
 <script src="https://code.jquery.com/jquery-3.4.1.slim.js"
 	integrity="sha256-BTlTdQO9/fascB1drekrDVkaKd9PkwBymMlHOiG+qLI="
 	crossorigin="anonymous"></script>

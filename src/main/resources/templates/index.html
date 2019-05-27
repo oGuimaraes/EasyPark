@@ -37,10 +37,10 @@
         <div class="menu-desktop">
             <ul id="nav">
                 <li><a href="#" class="button">Inicio</a></li>
-                <li><a href="cadastroEstabelecimento" class="button">Cadastrar Estabelecimento</a></li>
-                <li><a href="entradaVeiculo" class="button">Entrada de Veículo</a></li>
-                <li><a href="saidaVeiculo" class="button">Saída de Veículo</a></li>
-                <li><a href="#">Relatórios</a>
+                <li><a id="setInfoEstacionamento" href="cadastroEstabelecimento" class="button">Alterar Estabelecimento</a></li>
+                <li class="visivel"><a href="entradaVeiculo" class="button">Entrada de Veículo</a></li>
+                <li class="visivel"><a href="saidaVeiculo" class="button">Saída de Veículo</a></li>
+                <li class="visivel"><a href="#">Relatórios</a>
                     <ul>
                         <li><a href="#">Relatório 1</a></li>
                         <li><a href="#">Relatório 2</a></li>
@@ -55,6 +55,7 @@
 
         </div>
     </div>
+    <script th:src="@{/javascript/main.js}"></script>
     <script src="https://code.jquery.com/jquery-3.4.1.slim.js" integrity="sha256-BTlTdQO9/fascB1drekrDVkaKd9PkwBymMlHOiG+qLI=" crossorigin="anonymous"></script>
     <script>
         $(".btn-menu").click(function(){
@@ -64,6 +65,7 @@
             $(".menu-mobile").hide();
         })
     </script>
+    <script  th:src="@{/javascript/main.js}"></script>
 </body>
 
 </html>
