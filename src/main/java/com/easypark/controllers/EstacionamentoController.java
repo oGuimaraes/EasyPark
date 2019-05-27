@@ -59,6 +59,7 @@ public class EstacionamentoController {
 		permanenciaEstadasPorMes();
 		System.out.println("\n");
 		permanenciaTodasEstadas();
+		System.out.println("Media Tempo Permanecido: " + estacionamentoModel.mediaTempoPermanecido());
 		return "index";
 	}
 	
@@ -269,7 +270,7 @@ public class EstacionamentoController {
 		System.out.println("Porcentagem de caminhonetes: "+ caminhonetes +"%.");
 		//return "index";
 	}
-	
+		
     //@RequestMapping("/index")
 //    public void mediaArrecadacao() {
 //        DecimalFormat formato = new DecimalFormat("#.##");

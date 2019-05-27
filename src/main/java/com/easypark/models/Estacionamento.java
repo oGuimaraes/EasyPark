@@ -1,14 +1,13 @@
 package com.easypark.models;
 
-
-
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.HashMap;
-
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Component
 public class Estacionamento {
@@ -16,7 +15,7 @@ public class Estacionamento {
 	private LocalTime horaAbertura;
 	private LocalTime horaFechamento;
 	private int quantidadeVagas;
-	private int qtdVeiculosEstacionados;
+	private int qtdVeiculosEstacionados = 0;
 	private Map<String, Estada> mapEstadasAtual;
 	private Double valorHora;
 	private Double valorAPagar;
@@ -135,6 +134,7 @@ public class Estacionamento {
 		infoEntradaVeiculo.put("dataEntrada", dataEntrada);
 		infoEntradaVeiculo.put("horaEntrada", horaEntrada);
 		infoEntradaVeiculo.put("novaEstada", novaEstada);
+		
 
 		System.out.println("Exibindo estada no momento da insercao inicial"+novaEstada);
 
@@ -145,10 +145,10 @@ public class Estacionamento {
 	}
 
 	public void calculaValor(int horasPermanecidas, int minutosPermanecidos) {
-		Double valorAPagar;
+		double valorAPagar;
 		System.out.println("Valor hora:" + this.getValorHora());
-		Double valorHoraSemMinutos =  this.getValorHora() * horasPermanecidas;
-		Double valorMinutos = (this.getValorHora() / 60) * minutosPermanecidos;
+		double valorHoraSemMinutos =  this.getValorHora() * horasPermanecidas;
+		double valorMinutos = (this.getValorHora() / 60) * minutosPermanecidos;
 		valorAPagar = valorHoraSemMinutos + valorMinutos;
 		this.setValorAPagar(valorAPagar);
 	}
@@ -173,6 +173,17 @@ public class Estacionamento {
 
 	public void setValorAPagar(Double valorAPagar) {
 		this.valorAPagar = valorAPagar;
+	}
+	
+	public double mediaTempoPermanecido() {
+		EstadaDAO estadaDAO = new EstadaDAO();
+		List<Estada> result = estadaDAO.recuperaEstadasGeral();
+		double media = result.stream()
+			.filter(t->t.getDataSaida() != null)
+			.mapToDouble(Estada::getTempoDePermanencia)
+			.average()
+			.getAsDouble();
+		return media;
 	}
 
 }

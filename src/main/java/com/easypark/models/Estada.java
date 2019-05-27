@@ -15,8 +15,8 @@ public class Estada {
     private Veiculo veiculo;
     private LocalDateTime dataSaida;
     private LocalTime horaSaida;
-    private long tempoDePermanencia;
-    private Double valorEstada;
+    private double tempoDePermanencia;
+    private double valorEstada;
 
     public Estada(LocalDateTime dataEntrada, LocalTime horaEntrada, Veiculo veiculo) {
         this.dataEntrada = dataEntrada;
@@ -25,7 +25,7 @@ public class Estada {
     }
 
     public Estada(LocalDateTime dataEntrada, LocalTime horaEntrada, Veiculo veiculo, LocalDateTime dataSaida, LocalTime horaSaida,
-                  long tempoDePermanencia, Double valorEstada) {
+                  long tempoDePermanencia, double valorEstada) {
         this.dataEntrada = dataEntrada;
         this.veiculo = veiculo;
         this.horaEntrada = horaEntrada;
@@ -48,9 +48,10 @@ public class Estada {
         estadaVeiculo.setDataSaida(LocalDateTime.now());
         estadaVeiculo.setHoraSaida(LocalTime.now().plusHours(2));
 
-        long minutosPermanecidos = estadaVeiculo.getHoraEntrada().until(estadaVeiculo.getHoraSaida(), ChronoUnit.MINUTES);
+        double minutosPermanecidos = (double) estadaVeiculo.getHoraEntrada().until(estadaVeiculo.getHoraSaida(), ChronoUnit.MINUTES);
+        
         estadaVeiculo.setTempoDePermanencia(minutosPermanecidos);
-        long horasPermanecidas = 0;
+        double horasPermanecidas = 0;
         while (minutosPermanecidos > 59) {
             minutosPermanecidos -= 60;
             horasPermanecidas++;
@@ -98,7 +99,7 @@ public class Estada {
         this.horaSaida = horaSaida;
     }
 
-    public Double getValorEstada() {
+    public double getValorEstada() {
         return valorEstada;
     }
 
@@ -128,10 +129,10 @@ public class Estada {
 //
 //    }
 
-    public void calculaValor(long horasPermanecidas, long minutosPermanecidos, Double valorHora) {
-        Double valorAPagar;
-        Double valorHoraSemMinutos = (valorHora * horasPermanecidas);
-        Double valorMinutos = ((valorHora / 60) * minutosPermanecidos);
+    public void calculaValor(double horasPermanecidas, double minutosPermanecidos, double valorHora) {
+        double valorAPagar;
+        double valorHoraSemMinutos = (valorHora * horasPermanecidas);
+        double valorMinutos = ((valorHora / 60) * minutosPermanecidos);
         valorAPagar = valorHoraSemMinutos + valorMinutos;
         setValorEstada(valorAPagar);
         if (valorAPagar < 0) {
@@ -140,11 +141,11 @@ public class Estada {
         this.valorEstada = valorAPagar;
     }
 
-    public long getTempoDePermanencia() {
+    public double getTempoDePermanencia() {
         return tempoDePermanencia;
     }
 
-    public void setTempoDePermanencia(long tempoDePermanencia) {
+    public void setTempoDePermanencia(double tempoDePermanencia) {
         this.tempoDePermanencia = tempoDePermanencia;
     }
 
