@@ -55,12 +55,13 @@ public class Estada {
             minutosPermanecidos -= 60;
             horasPermanecidas++;
         }
-        if (horasPermanecidas < 0) {
-        	horasPermanecidas = horasPermanecidas * (-1);
-        }
-        if (minutosPermanecidos < 0) {
-        	minutosPermanecidos = minutosPermanecidos * (-1);
-        }
+//        if (horasPermanecidas < 0) {
+//        	horasPermanecidas = horasPermanecidas * (-1);
+//        }
+//        if (minutosPermanecidos < 0) {
+//        	minutosPermanecidos = minutosPermanecidos * (-1);
+//        }
+ 
         estadaVeiculo.calculaValor(horasPermanecidas, minutosPermanecidos, estacionamento.getValorHora());
         LocalTime tempoPermanecido = LocalTime.of((int) horasPermanecidas,(int) minutosPermanecidos);
         
@@ -76,7 +77,7 @@ public class Estada {
         estacionamento.getEstadaList().remove(placa);
         EstadaDAO estadaDAO = new EstadaDAO();
         estadaDAO.update(estadaVeiculo);
-
+        estadaDAO.adicionaEstadasGeral(estadaVeiculo);
         return infoSaidaVeiculo;
     }
 
@@ -183,6 +184,17 @@ public class Estada {
 
     public void setDataSaida(LocalDateTime dataSaida) {
         this.dataSaida = dataSaida;
+    }
+    
+    public LocalTime tempoAtualEstada() {
+        long minutosPermanecidos = this.getHoraEntrada().until(LocalTime.now(), ChronoUnit.MINUTES);
+        long horasPermanecidas = 0;
+        while (minutosPermanecidos > 59) {
+            minutosPermanecidos -= 60;
+            horasPermanecidas++;
+        }
+        LocalTime tempoPermanecido = LocalTime.of((int) horasPermanecidas,(int) minutosPermanecidos);
+        return tempoPermanecido;
     }
 
 

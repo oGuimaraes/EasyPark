@@ -1,10 +1,14 @@
 package com.easypark.controllers;
 
 import java.io.File;
+import java.io.IOException;
+import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.Month;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.List;
 import org.springframework.stereotype.Controller;
@@ -20,6 +24,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.File;
 import java.util.Map;
+import java.util.Objects;
 
 import com.easypark.models.*;
 
@@ -29,15 +34,39 @@ public class EstacionamentoController {
 	private Estacionamento estacionamentoModel = new Estacionamento();
 	private EstadaDAO estadaDAO = new EstadaDAO();
 
-	private static void criaArquivo() {
-		File f = new File("estada.txt");
-		File x = new File("estacionamento.txt");
+	private static void criaArquivo() throws IOException {
+        File f = new File("estada.txt");
+        if (!f.exists()) {
+            f.createNewFile();
+        }
+        File x = new File("estacionamento.txt");
+        if (!x.exists()) {
+            x.createNewFile();
+        }
+        File z = new File("estadasGeral.txt");
+        if (!z.exists()) {
+            z.createNewFile();
+        }
 	}
 
 	@RequestMapping("/index")
 	public String paginaInicial() {
+		System.out.println("\n");
+		exibeVeiculos();
+		System.out.println("\n");
+		relatorioTiposdeVeiculo();
+		System.out.println("\n");
+		permanenciaEstadasPorMes();
+		System.out.println("\n");
+		permanenciaTodasEstadas();
+		return "index";
+	}
+	
+	@RequestMapping("/")
+	public String inicializaBanco() {
 		estacionamentoModel = estacionamentoDAO.instanciaEstacionamento();
 		estadaDAO.instanciaEstadas(estacionamentoModel);
+
 		return "index";
 	}
 
@@ -60,7 +89,12 @@ public class EstacionamentoController {
 			                   @RequestParam("valorHora") Double valorHora) {
 		
 		ModelAndView mv = new ModelAndView("redirect:/infoEstabelecimentoCadastrado");
-		criaArquivo();
+		
+		try {
+			criaArquivo();	
+		} catch (IOException e) {
+            e.printStackTrace();
+        }
 		
 		/* Formatação e Data */
 		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm");
@@ -163,5 +197,95 @@ public class EstacionamentoController {
 	public String saidaVeiculo() {
 		return "saidaVeiculo";
 	}
+	
+	
+	
+    //Metodo que exibe todas as estadas no momento
+	//@RequestMapping("/index")
+	public void exibeVeiculos() {
+		List<Estada> veiculosEstacionados = estadaDAO.getAll();
+		DateTimeFormatter dataFormatter = DateTimeFormatter.ofPattern("dd/MM/uuuu HH:mm");
+		DateTimeFormatter horaFormatter = DateTimeFormatter.ofPattern("HH:mm");
+		for (Estada e: veiculosEstacionados){
+			System.out.println("Data/Hora de entrada: "+e.getDataEntrada().format(dataFormatter));
+			System.out.println("Placa: "+ e.getVeiculo().getPlaca());
+			System.out.println("Tipo: "+ e.getVeiculo().getTipoVeiculo());
+			System.out.println("Tempo desde a entrada: "+e.tempoAtualEstada().format(horaFormatter)+"\n");
+		}
+		//return "index";
+	}
+
+ 	//@RequestMapping("/index")
+	public void permanenciaTodasEstadas() {
+		List<Estada> estadas = estadaDAO.recuperaEstadasGeral();
+		int tempoTotalEstadas = 0;
+		float contadorEstadas = 0;
+		for (int i = 0; i < estadas.size(); i++) {
+			tempoTotalEstadas += estadas.get(i).getTempoDePermanencia();
+			contadorEstadas++;
+		}
+		System.out.println("Tempo medio permanecido: "+ tempoTotalEstadas/contadorEstadas);
+		//return "index";
+	}
+	//@RequestMapping("/index")
+	public void permanenciaEstadasPorMes() {
+		List<Estada> estadas = estadaDAO.recuperaEstadasGeral();
+		int tempoTotalEstadas = 0;
+		float contadorEstadas = 0;
+		for(Estada e: estadas ){
+			if(e.getDataSaida().getMonth().equals(Month.MAY) && e.getDataSaida().getYear() == 2019){
+				tempoTotalEstadas += e.getTempoDePermanencia();
+				contadorEstadas++;
+			}
+		}
+		System.out.println("Tempo medio permanecido: "+ tempoTotalEstadas/contadorEstadas + " minutos");
+		//return "index";
+	}
+	//@RequestMapping("/index")
+	public void relatorioTiposdeVeiculo() {
+		List<Estada> estadas = estadaDAO.recuperaEstadasGeral();
+		double motos = 0;
+		double carros = 0;
+		double caminhonetes = 0;
+
+		for (Estada estada : estadas) {
+			if (Objects.equals(estada.getVeiculo().getTipoVeiculo(), "Moto")) {
+				motos++;
+			} else if (Objects.equals(estada.getVeiculo().getTipoVeiculo(), "Carro")) {
+				carros++;
+			} else {
+				caminhonetes++;
+			}
+
+		}
+		DecimalFormat formato = new DecimalFormat("#.##");
+		motos = Double.valueOf(formato.format(motos/estadas.size()*100).replace(",", "."));
+		carros = Double.valueOf(formato.format(carros/estadas.size()*100).replace(",", "."));
+		caminhonetes = Double.valueOf(formato.format(caminhonetes/estadas.size()*100).replace(",", "."));
+
+		System.out.println("Total de veiculos: " + estadas.size());
+		System.out.println("Porcentagem de motos: "+ motos +"%.");
+		System.out.println("Porcentagem de carros: "+ carros +"%.");
+		System.out.println("Porcentagem de caminhonetes: "+ caminhonetes +"%.");
+		//return "index";
+	}
+	
+    //@RequestMapping("/index")
+//    public void mediaArrecadacao() {
+//        DecimalFormat formato = new DecimalFormat("#.##");
+//
+//        List<Estada> estadas = estadaDAO.recuperaEstadasGeral();
+//        long horasFuncionando = (estacionamentoModel.getHoraAbertura().until(estacionamentoModel.getHoraFechamento(), ChronoUnit.MINUTES)) / 60;
+//        double valorEstadas = 0;
+//        for (Estada estada : estadas) {
+//            if (estada.getDataSaida().getDayOfMonth() == 26)
+//                valorEstadas += estada.getValorEstada();
+//        }
+//        valorEstadas = Double.valueOf(formato.format(valorEstadas / horasFuncionando).replace(",", "."));
+//        System.out.println("Media do valor: " + valorEstadas);
+//
+//        //return "index";
+//    }
+	
 	
 }

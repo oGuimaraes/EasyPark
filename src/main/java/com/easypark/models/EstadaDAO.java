@@ -177,5 +177,40 @@ public class EstadaDAO implements SystemDAO<Estada, String> {
 			e.printStackTrace();
 		}
 	}
+	
+    public void adicionaEstadasGeral(Estada nova) {
+        try (BufferedWriter buffer_saida = new BufferedWriter(new FileWriter("estadasGeral.txt", true))) {
+            buffer_saida.write(nova.getDataEntrada() + "/");
+            buffer_saida.write(nova.getHoraEntrada() + "/");
+            buffer_saida.write(nova.getVeiculo().getPlaca() + "/");
+            buffer_saida.write(nova.getVeiculo().getTipoVeiculo() + "/");
+            buffer_saida.write(nova.getDataSaida() + "/");
+            buffer_saida.write(nova.getHoraSaida() + "/");
+            buffer_saida.write(nova.getTempoDePermanencia() + "/");
+            buffer_saida.write(nova.getValorEstada() + "/");
+            buffer_saida.newLine();
+            buffer_saida.flush();
+
+        } catch (Exception e) {
+            System.out.println("Erro ao gravar o Veiculo " + nova.getVeiculo().getPlaca() + "' no disco!");
+            e.printStackTrace();
+        }
+    }
+
+    public List<Estada> recuperaEstadasGeral() {
+        List<Estada> ests = new ArrayList<>();
+        Estada est;
+        try (BufferedReader buffer_entrada = new BufferedReader(new FileReader("estadasGeral.txt"))) {
+            String line;
+            while ((line = buffer_entrada.readLine()) != null) {
+                est = setValues(line);
+                ests.add(est);
+            }
+        } catch (Exception e) {
+            System.out.println("Erro ao ler as Estadas do disco rigido!");
+            e.printStackTrace();
+        }
+        return ests;
+    }
 
 }
