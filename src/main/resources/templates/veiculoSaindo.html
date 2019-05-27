@@ -56,11 +56,15 @@
 						<li><a href="#">Relatório 3</a></li>
 					</ul></li>
 			</ul>
-			<div class="info-estacionamento">
+			<div id="divInfo" class="info-estacionamento">
 				<span id="nomeEstabelecimento" th:text="${nomeEstabelecimentoInfo}"></span><br>
+				<span>Hora de Abertura: </span>
 				<span name="horaAberturaInfo" th:text="${horaAberturaInfo}">Hora Abertura</span><br>
+				<span>Hora de Fechamento: </span>
 				<span name="horaFechamentoInfo" th:text="${horaFechamentoInfo}">Hora Fechamento</span><br>
+				<span>Quantidade de vagas totais: </span>
 				<span name="quantidadeVagasInfo" th:text="${quantidadeVagasInfo}">Quantidade de Vagas Disponiveis</span><br>
+				<span>Valor Hora: R$</span>
 				<span name="precoInfo" th:text="${precoInfo}">Preço Hora</span>
 			</div>
 		</div>

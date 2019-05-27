@@ -124,7 +124,7 @@ public class EstacionamentoController {
 
 	@GetMapping("/saidaVeiculo")
 	public ModelAndView saidaForm(Model model) {
-		ModelAndView modelAndView = new ModelAndView("veiculoSaindo");
+		ModelAndView modelAndView = new ModelAndView("saidaVeiculo");
 		modelAndView.addObject("nomeEstabelecimentoInfo", estacionamentoModel.getNomeEstabelecimento());
 		modelAndView.addObject("horaAberturaInfo", estacionamentoModel.getHoraAbertura());
 		modelAndView.addObject("horaFechamentoInfo", estacionamentoModel.getHoraFechamento());
@@ -136,7 +136,7 @@ public class EstacionamentoController {
 
 	@PostMapping("/saidaVeiculo")
 	public ModelAndView veiculoEstacionado(@RequestParam("placa") String placaVeiculoSaindo) {
-		ModelAndView modelAndView = new ModelAndView("veiculoSaindo");
+		ModelAndView modelAndView = new ModelAndView("saidaVeiculo");
 		Map<String, Estada> mapEstada = estacionamentoModel.getEstadaList();
 		Estada estadaVeiculo = mapEstada.get(placaVeiculoSaindo);
 		Map<String, Object> informacoesSaida = estadaVeiculo.saidaVeiculo(estacionamentoModel, placaVeiculoSaindo);
