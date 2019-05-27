@@ -136,7 +136,7 @@ public class EstacionamentoController {
 
 	@PostMapping("/saidaVeiculo")
 	public ModelAndView veiculoEstacionado(@RequestParam("placa") String placaVeiculoSaindo) {
-		ModelAndView modelAndView = new ModelAndView("saidaVeiculo");
+		ModelAndView modelAndView = new ModelAndView("veiculoSaindo");
 		Map<String, Estada> mapEstada = estacionamentoModel.getEstadaList();
 		Estada estadaVeiculo = mapEstada.get(placaVeiculoSaindo);
 		Map<String, Object> informacoesSaida = estadaVeiculo.saidaVeiculo(estacionamentoModel, placaVeiculoSaindo);

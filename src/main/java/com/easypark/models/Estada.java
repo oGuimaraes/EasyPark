@@ -55,8 +55,16 @@ public class Estada {
             minutosPermanecidos -= 60;
             horasPermanecidas++;
         }
+        if (horasPermanecidas < 0) {
+        	horasPermanecidas = horasPermanecidas * (-1);
+        }
+        if (minutosPermanecidos < 0) {
+        	minutosPermanecidos = minutosPermanecidos * (-1);
+        }
         estadaVeiculo.calculaValor(horasPermanecidas, minutosPermanecidos, estacionamento.getValorHora());
         LocalTime tempoPermanecido = LocalTime.of((int) horasPermanecidas,(int) minutosPermanecidos);
+        
+       
 
         //View
         infoSaidaVeiculo.put("tempoPermanecido", tempoPermanecido);
@@ -125,6 +133,9 @@ public class Estada {
         Double valorMinutos = ((valorHora / 60) * minutosPermanecidos);
         valorAPagar = valorHoraSemMinutos + valorMinutos;
         setValorEstada(valorAPagar);
+        if (valorAPagar < 0) {
+        	valorAPagar = valorAPagar * (-1);
+        }
         this.valorEstada = valorAPagar;
     }
 
