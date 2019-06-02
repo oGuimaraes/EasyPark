@@ -326,6 +326,10 @@ label 				 {
     margin-bottom: 20px;
 }
 
+.estatistica {
+    margin-top: 15px;
+}
+
 .row-cabecalho {
     justify-content: space-around;
     text-align: center;
@@ -349,7 +353,9 @@ label 				 {
     justify-content: space-around;
     flex-direction: row;
     width: 100% !important;
-    height: 30px;
+    height: auto;
+    min-height: 35px;
+    padding: 4px;
     align-items: center;
     border-bottom: 1px solid #e8e8e8;
     margin-left: 0px;

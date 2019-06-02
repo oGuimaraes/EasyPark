@@ -7,6 +7,7 @@ import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -193,11 +194,18 @@ public class Estada {
         return tempoPermanecido;
     }
 
+    public double taxaDeRetorno(String placa) {
+        EstadaDAO estadaDAO = new EstadaDAO();
+        double quant = 0;
+        List<Estada> result = estadaDAO.recuperaEstadasGeral();
+        quant  = result.stream()
+                .filter(x -> x.getVeiculo().getPlaca().equals(placa))
+                .mapToInt(w -> w.getVeiculo().getContadorDeVezes())
+                .average().getAsDouble();
+
+        return (quant/30)*100;
+
+    }
 
 
-//    @Override
-//    public boolean test(Estada estada) {
-//
-//        return (estada) -> estada.getTempoDePermanencia() > 120;
-//    }
 }

@@ -8,6 +8,8 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
+import static java.time.temporal.ChronoUnit.MINUTES;
+
 @Component
 public class Estacionamento {
 	private String nomeEstabelecimento;
@@ -107,6 +109,7 @@ public class Estacionamento {
 
 	public Map<String, Object> entradaVeiculo(Veiculo veiculo) {
 		Map<String,Object> infoEntradaVeiculo = new HashMap<>();
+		veiculo.setContadorDeVezes();
 
 		if (this.mapEstadasAtual == null) {
 			this.mapEstadasAtual = new HashMap<>();
@@ -209,33 +212,6 @@ public class Estacionamento {
         System.out.println("Tempo medio permanecido: "+ tempoTotalEstadas/contadorEstadas);
     }
 
-	public void relatorioTiposdeVeiculo(EstadaDAO estadaDAO) {
-		List<Estada> estadas = estadaDAO.recuperaEstadasGeral();
-		double motos = 0;
-		double carros = 0;
-		double caminhonetes = 0;
-
-		for (Estada estada: estadas) {
-			if (Objects.equals(estada.getVeiculo().getTipoVeiculo(), "Moto")) {
-				motos++;
-			} else if (Objects.equals(estada.getVeiculo().getTipoVeiculo(), "Carro")) {
-				carros++;
-			} else {
-				caminhonetes++;
-			}
-		}
-
-		DecimalFormat formato = new DecimalFormat("#.##");
-		motos = Double.valueOf(formato.format(motos/estadas.size()*100).replace(",", "."));
-		carros = Double.valueOf(formato.format(carros/estadas.size()*100).replace(",", "."));
-		caminhonetes = Double.valueOf(formato.format(caminhonetes/estadas.size()*100).replace(",", "."));
-
-		System.out.println("Total de veiculos: " + estadas.size());
-		System.out.println("Porcentagem de motos: "+ motos +"%.");
-		System.out.println("Porcentagem de carros: "+ carros +"%.");
-		System.out.println("Porcentagem de caminhonetes: "+ caminhonetes +"%.");
-	}
-
 	public StringBuilder porcentagemTipoVeiculo(EstadaDAO estadaDAO) {
 		List<Estada> result = estadaDAO.getAll();
 		Map<String, Double> porcentagensVeiculos = new HashMap<>();
@@ -253,6 +229,18 @@ public class Estacionamento {
 				.append("<div class='progress-bar progress-bar-danger' role='progressbar' style='width:" + porcentagemCaminhonete + "%'> Caminhonete (" + df.format(porcentagemCaminhonete) + "%) </div>");
 
 		return barraProgresso;
+	}
+
+	public double mediaArrecadacaoHora() {
+		EstadaDAO estadaDAO = new EstadaDAO();
+		List<Estada> result = estadaDAO.recuperaEstadasGeral();
+		double media = result.stream()
+				.filter(t -> t.getDataSaida() != null)
+				.mapToDouble(Estada::getValorEstada)
+				.average().getAsDouble();
+
+		double horasFuncionamento = (double)(MINUTES.between(this.getHoraAbertura(), this.getHoraFechamento())/60);
+		return (media/horasFuncionamento);
 	}
 
 }

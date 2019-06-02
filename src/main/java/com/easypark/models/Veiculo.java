@@ -7,6 +7,7 @@ public class Veiculo {
 
     private String placa;
     private String tipoVeiculo;
+	private int contadorDeVezes;
     //List<Estada> estadas = new ArrayList<>();
 
     public Veiculo(String placa, String tipoVeiculo) {
@@ -32,6 +33,13 @@ public class Veiculo {
 
 	public void setPlaca(String placa) {
 		this.placa = placa;
+	}
+
+	public int getContadorDeVezes() {
+		return contadorDeVezes;
+	}
+	public void setContadorDeVezes() {
+		contadorDeVezes++;
 	}
 
 	@Override

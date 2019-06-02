@@ -17,6 +17,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.easypark.models.*;
 
+import static java.time.temporal.ChronoUnit.MINUTES;
+
 @Controller
 public class EstacionamentoController {
 	private EstacionamentoDAO estacionamentoDAO = new EstacionamentoDAO();
@@ -40,13 +42,9 @@ public class EstacionamentoController {
 
 	@RequestMapping("/index")
 	public String paginaInicial() {
-		System.out.println("1");
-		estacionamentoModel.porcentagemTipoVeiculo(estadaDAO);
-		System.out.println("3");
-		permanenciaEstadasPorMes();
-		System.out.println("4");
 		estacionamentoModel.permanenciaTodasEstadas(estadaDAO);
 		System.out.println("Media Tempo Permanecido: " + estacionamentoModel.mediaTempoPermanecido());
+		System.out.println("Media Arrecadacao Por Hora: " + estacionamentoModel.mediaArrecadacaoHora());
 		return "index";
 	}
 	
@@ -201,19 +199,25 @@ public class EstacionamentoController {
 		return modelAndView;
 	}
 
-	public void permanenciaEstadasPorMes() {
-		List<Estada> estadas = estadaDAO.recuperaEstadasGeral();
-		int tempoTotalEstadas = 0;
-		float contadorEstadas = 0;
-		for(Estada e: estadas ){
-			if(e.getDataSaida().getMonth().equals(Month.MAY) && e.getDataSaida().getYear() == 2019){
-				tempoTotalEstadas += e.getTempoDePermanencia();
-				contadorEstadas++;
-			}
-		}
-		System.out.println("Tempo medio permanecido: "+ tempoTotalEstadas/contadorEstadas + " minutos");
+	@RequestMapping(value = "/estatisticaDoEstabelecimento", method = RequestMethod.GET)
+	public ModelAndView estatistica(Estacionamento estacionamento) {
+
+		ModelAndView modelAndView = new ModelAndView("estatisticaDoEstabelecimento");
+
+		modelAndView.addObject("nomeEstabelecimentoInfo", estacionamentoModel.getNomeEstabelecimento());
+		modelAndView.addObject("horaAberturaInfo", estacionamentoModel.getHoraAbertura());
+		modelAndView.addObject("horaFechamentoInfo", estacionamentoModel.getHoraFechamento());
+		modelAndView.addObject("quantidadeVagasInfo", estacionamentoModel.getQuantidadeVagas());
+		modelAndView.addObject("precoInfo", estacionamentoModel.getValorHora());
+
+		DecimalFormat formato = new DecimalFormat("#.##");
+
+		modelAndView.addObject("mediaTempoPermanecido", formato.format(estacionamentoModel.mediaTempoPermanecido()));
+		modelAndView.addObject("mediaArrecadadoHora", formato.format(estacionamentoModel.mediaArrecadacaoHora()));
+
+
+
+		return modelAndView;
 	}
-
-
 	
 }
