@@ -51,14 +51,14 @@ public class EstacionamentoController {
 
 	@RequestMapping("/index")
 	public String paginaInicial() {
-		System.out.println("\n");
-		exibeVeiculos();
-		System.out.println("\n");
+		System.out.println("1");
+		estacionamentoModel.exibeVeiculos(estadaDAO);
+		System.out.println("2");
 		relatorioTiposdeVeiculo();
-		System.out.println("\n");
+		System.out.println("3");
 		permanenciaEstadasPorMes();
-		System.out.println("\n");
-		permanenciaTodasEstadas();
+		System.out.println("4");
+		estacionamentoModel.permanenciaTodasEstadas(estadaDAO);
 		System.out.println("Media Tempo Permanecido: " + estacionamentoModel.mediaTempoPermanecido());
 		return "index";
 	}
@@ -203,31 +203,22 @@ public class EstacionamentoController {
 	
     //Metodo que exibe todas as estadas no momento
 	//@RequestMapping("/index")
-	public void exibeVeiculos() {
-		List<Estada> veiculosEstacionados = estadaDAO.getAll();
-		DateTimeFormatter dataFormatter = DateTimeFormatter.ofPattern("dd/MM/uuuu HH:mm");
-		DateTimeFormatter horaFormatter = DateTimeFormatter.ofPattern("HH:mm");
-		for (Estada e: veiculosEstacionados){
-			System.out.println("Data/Hora de entrada: "+e.getDataEntrada().format(dataFormatter));
-			System.out.println("Placa: "+ e.getVeiculo().getPlaca());
-			System.out.println("Tipo: "+ e.getVeiculo().getTipoVeiculo());
-			System.out.println("Tempo desde a entrada: "+e.tempoAtualEstada().format(horaFormatter)+"\n");
-		}
-		//return "index";
-	}
+
 
  	//@RequestMapping("/index")
-	public void permanenciaTodasEstadas() {
-		List<Estada> estadas = estadaDAO.recuperaEstadasGeral();
-		int tempoTotalEstadas = 0;
-		float contadorEstadas = 0;
-		for (int i = 0; i < estadas.size(); i++) {
-			tempoTotalEstadas += estadas.get(i).getTempoDePermanencia();
-			contadorEstadas++;
-		}
-		System.out.println("Tempo medio permanecido: "+ tempoTotalEstadas/contadorEstadas);
-		//return "index";
-	}
+
+//	public void permanenciaTodasEstadas() {
+//		List<Estada> estadas = estadaDAO.recuperaEstadasGeral();
+//		int tempoTotalEstadas = 0;
+//		float contadorEstadas = 0;
+//		for (int i = 0; i < estadas.size(); i++) {
+//			tempoTotalEstadas += estadas.get(i).getTempoDePermanencia();
+//			contadorEstadas++;
+//		}
+//		System.out.println("Tempo medio permanecido: "+ tempoTotalEstadas/contadorEstadas);
+//		//return "index";
+//	}
+
 	//@RequestMapping("/index")
 	public void permanenciaEstadasPorMes() {
 		List<Estada> estadas = estadaDAO.recuperaEstadasGeral();
@@ -270,23 +261,6 @@ public class EstacionamentoController {
 		System.out.println("Porcentagem de caminhonetes: "+ caminhonetes +"%.");
 		//return "index";
 	}
-		
-    //@RequestMapping("/index")
-//    public void mediaArrecadacao() {
-//        DecimalFormat formato = new DecimalFormat("#.##");
-//
-//        List<Estada> estadas = estadaDAO.recuperaEstadasGeral();
-//        long horasFuncionando = (estacionamentoModel.getHoraAbertura().until(estacionamentoModel.getHoraFechamento(), ChronoUnit.MINUTES)) / 60;
-//        double valorEstadas = 0;
-//        for (Estada estada : estadas) {
-//            if (estada.getDataSaida().getDayOfMonth() == 26)
-//                valorEstadas += estada.getValorEstada();
-//        }
-//        valorEstadas = Double.valueOf(formato.format(valorEstadas / horasFuncionando).replace(",", "."));
-//        System.out.println("Media do valor: " + valorEstadas);
-//
-//        //return "index";
-//    }
-	
+
 	
 }

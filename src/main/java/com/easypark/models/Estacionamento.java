@@ -4,6 +4,7 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -106,10 +107,6 @@ public class Estacionamento {
 
 	}
 
-
-
-	//StringBuilder sb = new StringBuilder();
-
 	public Map<String, Object> entradaVeiculo(Veiculo veiculo) {
 		Map<String,Object> infoEntradaVeiculo = new HashMap<>();
 
@@ -117,7 +114,7 @@ public class Estacionamento {
 			this.mapEstadasAtual = new HashMap<>();
 		}
 
-		/* Formata��o String to DateTime */
+		/* Formatacao String to DateTime */
 
 		LocalDateTime dataEntrada = LocalDateTime.now();
 		LocalTime horaEntrada = LocalTime.now();
@@ -153,8 +150,6 @@ public class Estacionamento {
 		this.setValorAPagar(valorAPagar);
 	}
 
-
-
 	public Map<String, Estada> getEstadaList() {
 		return mapEstadasAtual;
 	}
@@ -185,5 +180,29 @@ public class Estacionamento {
 			.getAsDouble();
 		return media;
 	}
+
+    public void exibeVeiculos(EstadaDAO estadaDAO) {
+        List<Estada> veiculosEstacionados = estadaDAO.getAll();
+        DateTimeFormatter dataFormatter = DateTimeFormatter.ofPattern("dd/MM/uuuu HH:mm");
+        DateTimeFormatter horaFormatter = DateTimeFormatter.ofPattern("HH:mm");
+        for (Estada e: veiculosEstacionados){
+            System.out.println("Data/Hora de entrada: "+e.getDataEntrada().format(dataFormatter));
+            System.out.println("Placa: "+ e.getVeiculo().getPlaca());
+            System.out.println("Tipo: "+ e.getVeiculo().getTipoVeiculo());
+            System.out.println("Tempo desde a entrada: "+e.tempoAtualEstada().format(horaFormatter)+"\n");
+        }
+    }
+
+    public void permanenciaTodasEstadas(EstadaDAO estadaDAO) {
+        List<Estada> estadas = estadaDAO.recuperaEstadasGeral();
+        int tempoTotalEstadas = 0;
+        float contadorEstadas = 0;
+        for (int i = 0; i < estadas.size(); i++) {
+            tempoTotalEstadas += estadas.get(i).getTempoDePermanencia();
+            contadorEstadas++;
+        }
+        System.out.println("Tempo medio permanecido: "+ tempoTotalEstadas/contadorEstadas);
+        //return "index";
+    }
 
 }

@@ -66,7 +66,7 @@ public class EstadaDAO implements SystemDAO<Estada, String> {
 		if (atributos.length > 4) {
 			est.setDataSaida(LocalDateTime.parse(atributos[4]));
 			est.setHoraSaida(LocalTime.parse(atributos[5]));
-			est.setTempoDePermanencia(Long.parseLong(atributos[6]));
+			est.setTempoDePermanencia(Double.parseDouble(atributos[6]));
 			est.setValorEstada(Double.parseDouble(atributos[7]));
 		}
 		est.setVeiculo(v);
