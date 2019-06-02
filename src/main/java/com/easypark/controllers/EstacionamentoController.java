@@ -167,7 +167,8 @@ public class EstacionamentoController {
 		modelAndView.addObject("dataHoraEntrada", informacoesSaida.get("dataHoraEntrada"));
 		modelAndView.addObject("dataHoraSaida", informacoesSaida.get("dataHoraSaida"));
 		modelAndView.addObject("tipoVeiculo", informacoesSaida.get("tipoVeiculo"));
-		modelAndView.addObject("valorAPagar", informacoesSaida.get("valorAPagar"));
+		DecimalFormat formato = new DecimalFormat("#.##");
+		modelAndView.addObject("valorAPagar", formato.format(informacoesSaida.get("valorAPagar")));
 		modelAndView.addObject("nomeEstabelecimentoInfo", estacionamentoModel.getNomeEstabelecimento());
 		modelAndView.addObject("horaAberturaInfo", estacionamentoModel.getHoraAbertura());
 		modelAndView.addObject("horaFechamentoInfo", estacionamentoModel.getHoraFechamento());
@@ -180,7 +181,6 @@ public class EstacionamentoController {
 
 		return modelAndView;
 	}
-
 
 	@RequestMapping(value = "/veiculosEstacionados", method = RequestMethod.GET)
 	public ModelAndView veículos(Estacionamento estacionamento) {
@@ -201,7 +201,6 @@ public class EstacionamentoController {
 		return modelAndView;
 	}
 
-	//@RequestMapping("/index")
 	public void permanenciaEstadasPorMes() {
 		List<Estada> estadas = estadaDAO.recuperaEstadasGeral();
 		int tempoTotalEstadas = 0;
@@ -213,7 +212,6 @@ public class EstacionamentoController {
 			}
 		}
 		System.out.println("Tempo medio permanecido: "+ tempoTotalEstadas/contadorEstadas + " minutos");
-		//return "index";
 	}
 
 

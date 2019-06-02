@@ -3,6 +3,7 @@ package com.easypark.models;
 import java.text.DecimalFormat;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
@@ -44,20 +45,31 @@ public class Estada {
         Estada estadaVeiculo = estacionamento.getEstadaVeiculo(placa);
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/uuuu HH:mm");
-        estadaVeiculo.setDataSaida(LocalDateTime.now());
+        estadaVeiculo.setDataSaida(LocalDateTime.of(2019, 06, 2, 18, 53));
         estadaVeiculo.setHoraSaida(LocalTime.now().plusHours(2));
 
-        double minutosPermanecidos = (double) estadaVeiculo.getHoraEntrada().until(estadaVeiculo.getHoraSaida(), ChronoUnit.MINUTES);
-        
+        long begin = estadaVeiculo.getDataEntrada().atOffset(ZoneOffset.UTC).toInstant().toEpochMilli();
+        long end = estadaVeiculo.getDataSaida().atOffset(ZoneOffset.UTC).toInstant().toEpochMilli();
+        long diferencaMili = end - begin;
+        System.out.println(diferencaMili/60000);
+
+        double minutosPermanecidos = (double) diferencaMili/60000;;
         estadaVeiculo.setTempoDePermanencia(minutosPermanecidos);
-        double horasPermanecidas = 0;
-        while (minutosPermanecidos > 59) {
-            minutosPermanecidos -= 60;
-            horasPermanecidas++;
-        }
- 
+        double horasPermanecidas = (double) diferencaMili/3600000;
+
+        System.out.println("Imprimindo minutos: "+ minutosPermanecidos);
+        System.out.println("Imprimindo horas: "+ horasPermanecidas);
+
         estadaVeiculo.calculaValor(horasPermanecidas, minutosPermanecidos, estacionamento.getValorHora());
-        LocalTime tempoPermanecido = LocalTime.of((int) horasPermanecidas,(int) minutosPermanecidos);
+
+        int mostraHora = 0;
+        int mostraMinuto = (int) diferencaMili/60000;
+        while (mostraMinuto > 59) {
+            mostraMinuto -= 60;
+            mostraHora++;
+        }
+
+        String tempoPermanecido = mostraHora+":"+mostraMinuto;
 
         //View
         infoSaidaVeiculo.put("tempoPermanecido", tempoPermanecido);
@@ -116,12 +128,12 @@ public class Estada {
         double valorAPagar;
         double valorHoraSemMinutos = (valorHora * horasPermanecidas);
         double valorMinutos = ((valorHora / 60) * minutosPermanecidos);
-        valorAPagar = valorHoraSemMinutos + valorMinutos;
+        valorAPagar = valorMinutos;
         setValorEstada(valorAPagar);
         if (valorAPagar < 0) {
         	valorAPagar = valorAPagar * (-1);
         }
-        this.valorEstada = valorAPagar;
+        this.valorEstada = (valorAPagar);
     }
 
     public double getTempoDePermanencia() {

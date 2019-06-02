@@ -23,7 +23,7 @@ ul {list-style: none;}
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 10px 20px;
+    padding: 0px 20px;
 }
 
 .btn-menu {
@@ -97,7 +97,6 @@ ul {list-style: none;}
 .container {
     width: 100%;
     display: flex;
-
 }
 
 
@@ -324,6 +323,7 @@ label 				 {
     background-color: #f8f8f8;
     box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1);
     max-width: 600px;
+    margin-bottom: 20px;
 }
 
 .row-cabecalho {
@@ -351,7 +351,9 @@ label 				 {
     width: 100% !important;
     height: 30px;
     align-items: center;
-    border-bottom: 1px solid #f2f2f2;
+    border-bottom: 1px solid #e8e8e8;
+    margin-left: 0px;
+    margin-right: 0px
 }
 
 .row:hover {
@@ -372,7 +374,7 @@ padding-top: 2px;
 }
 
 .footer {
-    width: 40px;
+    height: 30px;
 }
 
 
