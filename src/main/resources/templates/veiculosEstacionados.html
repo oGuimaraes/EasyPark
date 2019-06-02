@@ -9,11 +9,13 @@
     <meta name="description" content="Sistema de Estacionamento - EasyPark">
     <meta name="Author" contents="Otávio Guimarães, Daniel Lyncon">
     <link href="https://fonts.googleapis.com/css?family=PT+Sans" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}"/>
     <link rel="stylesheet" type="text/css" href="../static/css/style.css"/>
     <link rel="stylesheet"
           href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
     <link rel="icon" href="../images/icon.png" />
+
 </head>
 
 <body>
@@ -69,6 +71,14 @@
     <div class="aplicacao">
             <h2 class="titulo">Veículos Estacionados</h2>
 
+            <div class="container-bt">
+                    <span class="subtitulo">Utilização do estacionamento por tipo de veículo estacionado:</span> 
+                    <br>
+                    <div class="progress">
+                        <span name="porcentagemVeiculos" th:utext="${porcentagemVeiculos}"></span>
+                    </div>
+                </div>
+
         <div class="tabela">
             <div class="row-cabecalho">
                 <div class="cell">Placa</div>
@@ -80,6 +90,7 @@
 
     </div>
 </body>
+<footer class="footer"></footer>
 <script th:src="@{/javascript/main.js}"></script>
 <script src="https://code.jquery.com/jquery-3.4.1.slim.js"
         integrity="sha256-BTlTdQO9/fascB1drekrDVkaKd9PkwBymMlHOiG+qLI="

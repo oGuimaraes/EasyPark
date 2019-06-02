@@ -2,14 +2,11 @@ package com.easypark.models;
 
 import org.springframework.stereotype.Component;
 
+import java.text.DecimalFormat;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
+import java.util.*;
 
 @Component
 public class Estacionamento {
@@ -199,7 +196,6 @@ public class Estacionamento {
 					append("<div class='cell'>" + e.tempoAtualEstada().format(horaFormatter) + "</div>").append("</div>");
 		}
 		return veiculos;
-
     }
 
     public void permanenciaTodasEstadas(EstadaDAO estadaDAO) {
@@ -211,7 +207,52 @@ public class Estacionamento {
             contadorEstadas++;
         }
         System.out.println("Tempo medio permanecido: "+ tempoTotalEstadas/contadorEstadas);
-        //return "index";
     }
+
+	public void relatorioTiposdeVeiculo(EstadaDAO estadaDAO) {
+		List<Estada> estadas = estadaDAO.recuperaEstadasGeral();
+		double motos = 0;
+		double carros = 0;
+		double caminhonetes = 0;
+
+		for (Estada estada: estadas) {
+			if (Objects.equals(estada.getVeiculo().getTipoVeiculo(), "Moto")) {
+				motos++;
+			} else if (Objects.equals(estada.getVeiculo().getTipoVeiculo(), "Carro")) {
+				carros++;
+			} else {
+				caminhonetes++;
+			}
+		}
+
+		DecimalFormat formato = new DecimalFormat("#.##");
+		motos = Double.valueOf(formato.format(motos/estadas.size()*100).replace(",", "."));
+		carros = Double.valueOf(formato.format(carros/estadas.size()*100).replace(",", "."));
+		caminhonetes = Double.valueOf(formato.format(caminhonetes/estadas.size()*100).replace(",", "."));
+
+		System.out.println("Total de veiculos: " + estadas.size());
+		System.out.println("Porcentagem de motos: "+ motos +"%.");
+		System.out.println("Porcentagem de carros: "+ carros +"%.");
+		System.out.println("Porcentagem de caminhonetes: "+ caminhonetes +"%.");
+	}
+
+	public StringBuilder porcentagemTipoVeiculo(EstadaDAO estadaDAO) {
+		List<Estada> result = estadaDAO.getAll();
+		Map<String, Double> porcentagensVeiculos = new HashMap<>();
+
+		double porcentagemCarros = (double)(result.stream().filter(t-> t.getVeiculo().getTipoVeiculo().equals("Carro")).count())/result.size()*100;
+		double porcentagemMotos = (double)(result.stream().filter(t-> t.getVeiculo().getTipoVeiculo().equals("Moto")).count())/result.size()*100;
+		double porcentagemCaminhonete = (double)(result.stream().filter(t-> t.getVeiculo().getTipoVeiculo().equals("Caminhonete")).count())/result.size()*100;
+
+		StringBuilder barraProgresso = new StringBuilder();
+
+		DecimalFormat df = new DecimalFormat("#,###.0");
+
+		barraProgresso.append("<div class='progress-bar progress-bar-success' role='progressbar' style='width:" + porcentagemCarros + "%'> Carro (" + df.format(porcentagemCarros) + "%) </div>")
+				.append("<div class='progress-bar progress-bar-warning' role='progressbar' style='width:" + porcentagemMotos + "%'> Moto (" + df.format(porcentagemMotos) + "%) </div>")
+				.append("<div class='progress-bar progress-bar-danger' role='progressbar' style='width:" + porcentagemCaminhonete + "%'> Caminhonete (" + df.format(porcentagemCaminhonete) + "%) </div>");
+
+		return barraProgresso;
+	}
 
 }

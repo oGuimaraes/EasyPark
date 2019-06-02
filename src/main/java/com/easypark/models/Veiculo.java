@@ -39,6 +39,5 @@ public class Veiculo {
 		return new StringBuilder().append(placa).append(";").append(tipoVeiculo).toString();
 	}
     
-	
-    
+
 }

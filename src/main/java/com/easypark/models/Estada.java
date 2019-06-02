@@ -40,7 +40,6 @@ public class Estada {
 
     public Map<String, Object> saidaVeiculo(Estacionamento estacionamento, String placa) {
 
-
         Map<String, Object> infoSaidaVeiculo = new HashMap<>();
         Estada estadaVeiculo = estacionamento.getEstadaVeiculo(placa);
 
@@ -56,17 +55,9 @@ public class Estada {
             minutosPermanecidos -= 60;
             horasPermanecidas++;
         }
-//        if (horasPermanecidas < 0) {
-//        	horasPermanecidas = horasPermanecidas * (-1);
-//        }
-//        if (minutosPermanecidos < 0) {
-//        	minutosPermanecidos = minutosPermanecidos * (-1);
-//        }
  
         estadaVeiculo.calculaValor(horasPermanecidas, minutosPermanecidos, estacionamento.getValorHora());
         LocalTime tempoPermanecido = LocalTime.of((int) horasPermanecidas,(int) minutosPermanecidos);
-        
-       
 
         //View
         infoSaidaVeiculo.put("tempoPermanecido", tempoPermanecido);
@@ -107,6 +98,10 @@ public class Estada {
         return veiculo;
     }
 
+    public String getTipoVeiculo() {
+        return veiculo.getTipoVeiculo();
+    }
+
     public void setVeiculo(Veiculo veiculo) {
         this.veiculo = veiculo;
     }
@@ -116,18 +111,6 @@ public class Estada {
         valorEstada = Double.valueOf(formato.format(valorEstada).replace(",", "."));
         this.valorEstada = valorEstada;
     }
-
-//    public String calcTempo() {
-//
-//        int year = (getDataSaida().getYear()) - (getDataEntrada().getYear());
-//        int month = (getDataSaida().getMonthValue()) - (getDataEntrada().getMonthValue());
-//        int day = (getDataSaida().getDayOfMonth()) - (getDataEntrada().getDayOfMonth());
-//        int hour = (getDataSaida().getHour()) - (getDataEntrada().getHour());
-//        int minute = (getDataSaida().getMinute()) - (getDataEntrada().getMinute());
-//
-//        return "" + year + "/" + month + "/" + day + " " + hour + ":" + minute;
-//
-//    }
 
     public void calculaValor(double horasPermanecidas, double minutosPermanecidos, double valorHora) {
         double valorAPagar;
@@ -197,6 +180,7 @@ public class Estada {
         LocalTime tempoPermanecido = LocalTime.of((int) horasPermanecidas,(int) minutosPermanecidos);
         return tempoPermanecido;
     }
+
 
 
 //    @Override

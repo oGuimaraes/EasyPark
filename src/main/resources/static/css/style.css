@@ -193,7 +193,7 @@ ul {list-style: none;}
     font-size: 20px;
     font-weight: 600;
     color: #5f5f5f;
-    margin-bottom: 35px;
+    margin-bottom: 20px;
 }
 
 .aplicacao .input-radios .titulo {
@@ -358,5 +358,22 @@ label 				 {
     background-color: #ecfbcf;
     cursor: pointer;
 }
+
+.container-bt .progress {
+    margin-top: 8px;
+    height: 26px;
+    width: 400px;
+    margin-bottom: 50px;
+    border: 1px solid #dedede;
+}
+
+.container-bt .progress-bar {
+padding-top: 2px;
+}
+
+.footer {
+    width: 40px;
+}
+
 
 

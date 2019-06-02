@@ -1,34 +1,21 @@
 package com.easypark.controllers;
 
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.text.DecimalFormat;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.Month;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
 import java.util.*;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
 
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-import java.io.File;
 
 import com.easypark.models.*;
-
-import javax.swing.text.html.parser.Entity;
 
 @Controller
 public class EstacionamentoController {
@@ -54,9 +41,7 @@ public class EstacionamentoController {
 	@RequestMapping("/index")
 	public String paginaInicial() {
 		System.out.println("1");
-		estacionamentoModel.exibeVeiculos(estadaDAO);
-		System.out.println("2");
-		relatorioTiposdeVeiculo();
+		estacionamentoModel.porcentagemTipoVeiculo(estadaDAO);
 		System.out.println("3");
 		permanenciaEstadasPorMes();
 		System.out.println("4");
@@ -201,16 +186,20 @@ public class EstacionamentoController {
 	public ModelAndView veículos(Estacionamento estacionamento) {
 
 		StringBuilder sbVeiculos = estacionamentoModel.exibeVeiculos(estadaDAO);
+		StringBuilder barraDeProgressoVeiculos = estacionamentoModel.porcentagemTipoVeiculo(estadaDAO);
 
-		ModelAndView mv = new ModelAndView("veiculosEstacionados");
-		mv.addObject("infoVeiculos", sbVeiculos);
-		return mv;
+		ModelAndView modelAndView = new ModelAndView("veiculosEstacionados");
+
+		modelAndView.addObject("infoVeiculos", sbVeiculos);
+		modelAndView.addObject("porcentagemVeiculos", barraDeProgressoVeiculos);
+		modelAndView.addObject("nomeEstabelecimentoInfo", estacionamentoModel.getNomeEstabelecimento());
+		modelAndView.addObject("horaAberturaInfo", estacionamentoModel.getHoraAbertura());
+		modelAndView.addObject("horaFechamentoInfo", estacionamentoModel.getHoraFechamento());
+		modelAndView.addObject("quantidadeVagasInfo", estacionamentoModel.getQuantidadeVagas());
+		modelAndView.addObject("precoInfo", estacionamentoModel.getValorHora());
+
+		return modelAndView;
 	}
-
-
-
-
-
 
 	//@RequestMapping("/index")
 	public void permanenciaEstadasPorMes() {
@@ -226,34 +215,7 @@ public class EstacionamentoController {
 		System.out.println("Tempo medio permanecido: "+ tempoTotalEstadas/contadorEstadas + " minutos");
 		//return "index";
 	}
-	//@RequestMapping("/index")
-	public void relatorioTiposdeVeiculo() {
-		List<Estada> estadas = estadaDAO.recuperaEstadasGeral();
-		double motos = 0;
-		double carros = 0;
-		double caminhonetes = 0;
 
-		for (Estada estada : estadas) {
-			if (Objects.equals(estada.getVeiculo().getTipoVeiculo(), "Moto")) {
-				motos++;
-			} else if (Objects.equals(estada.getVeiculo().getTipoVeiculo(), "Carro")) {
-				carros++;
-			} else {
-				caminhonetes++;
-			}
-
-		}
-		DecimalFormat formato = new DecimalFormat("#.##");
-		motos = Double.valueOf(formato.format(motos/estadas.size()*100).replace(",", "."));
-		carros = Double.valueOf(formato.format(carros/estadas.size()*100).replace(",", "."));
-		caminhonetes = Double.valueOf(formato.format(caminhonetes/estadas.size()*100).replace(",", "."));
-
-		System.out.println("Total de veiculos: " + estadas.size());
-		System.out.println("Porcentagem de motos: "+ motos +"%.");
-		System.out.println("Porcentagem de carros: "+ carros +"%.");
-		System.out.println("Porcentagem de caminhonetes: "+ caminhonetes +"%.");
-		//return "index";
-	}
 
 	
 }
