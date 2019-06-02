@@ -1,6 +1,7 @@
 package com.easypark.controllers;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
@@ -9,24 +10,25 @@ import java.time.LocalTime;
 import java.time.Month;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.File;
-import java.util.Map;
-import java.util.Objects;
 
 import com.easypark.models.*;
+
+import javax.swing.text.html.parser.Entity;
 
 @Controller
 public class EstacionamentoController {
@@ -194,30 +196,21 @@ public class EstacionamentoController {
 		return modelAndView;
 	}
 
-	@RequestMapping("/saidaVeiculo")
-	public String saidaVeiculo() {
-		return "saidaVeiculo";
+
+	@RequestMapping(value = "/veiculosEstacionados", method = RequestMethod.GET)
+	public ModelAndView veículos(Estacionamento estacionamento) {
+
+		StringBuilder sbVeiculos = estacionamentoModel.exibeVeiculos(estadaDAO);
+
+		ModelAndView mv = new ModelAndView("veiculosEstacionados");
+		mv.addObject("infoVeiculos", sbVeiculos);
+		return mv;
 	}
-	
-	
-	
-    //Metodo que exibe todas as estadas no momento
-	//@RequestMapping("/index")
 
 
- 	//@RequestMapping("/index")
 
-//	public void permanenciaTodasEstadas() {
-//		List<Estada> estadas = estadaDAO.recuperaEstadasGeral();
-//		int tempoTotalEstadas = 0;
-//		float contadorEstadas = 0;
-//		for (int i = 0; i < estadas.size(); i++) {
-//			tempoTotalEstadas += estadas.get(i).getTempoDePermanencia();
-//			contadorEstadas++;
-//		}
-//		System.out.println("Tempo medio permanecido: "+ tempoTotalEstadas/contadorEstadas);
-//		//return "index";
-//	}
+
+
 
 	//@RequestMapping("/index")
 	public void permanenciaEstadasPorMes() {

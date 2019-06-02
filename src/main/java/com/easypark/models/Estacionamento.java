@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -181,16 +182,24 @@ public class Estacionamento {
 		return media;
 	}
 
-    public void exibeVeiculos(EstadaDAO estadaDAO) {
+    public StringBuilder exibeVeiculos(EstadaDAO estadaDAO) {
+		HashMap<Integer, String> infoVeiculo = new HashMap<>();
+
+		StringBuilder veiculos = new StringBuilder();
+
         List<Estada> veiculosEstacionados = estadaDAO.getAll();
         DateTimeFormatter dataFormatter = DateTimeFormatter.ofPattern("dd/MM/uuuu HH:mm");
         DateTimeFormatter horaFormatter = DateTimeFormatter.ofPattern("HH:mm");
-        for (Estada e: veiculosEstacionados){
-            System.out.println("Data/Hora de entrada: "+e.getDataEntrada().format(dataFormatter));
-            System.out.println("Placa: "+ e.getVeiculo().getPlaca());
-            System.out.println("Tipo: "+ e.getVeiculo().getTipoVeiculo());
-            System.out.println("Tempo desde a entrada: "+e.tempoAtualEstada().format(horaFormatter)+"\n");
-        }
+		int quantidadeVeiculos = this.getEstadaList().size();
+
+		for (Estada e: veiculosEstacionados) {
+			veiculos.append("<div class='row'/>").
+					append("<div class='cell'>" + e.getVeiculo().getPlaca() + "</div>").
+					append("<div class='cell'>" + e.getVeiculo().getTipoVeiculo() + "</div>").
+					append("<div class='cell'>" + e.tempoAtualEstada().format(horaFormatter) + "</div>").append("</div>");
+		}
+		return veiculos;
+
     }
 
     public void permanenciaTodasEstadas(EstadaDAO estadaDAO) {
