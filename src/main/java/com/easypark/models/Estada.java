@@ -46,7 +46,7 @@ public class Estada {
         Estada estadaVeiculo = estacionamento.getEstadaVeiculo(placa);
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/uuuu HH:mm");
-        estadaVeiculo.setDataSaida(LocalDateTime.of(2019, 06, 2, 18, 53));
+        estadaVeiculo.setDataSaida(LocalDateTime.now());
         estadaVeiculo.setHoraSaida(LocalTime.now().plusHours(2));
 
         long begin = estadaVeiculo.getDataEntrada().atOffset(ZoneOffset.UTC).toInstant().toEpochMilli();
@@ -202,7 +202,6 @@ public class Estada {
                 .filter(x -> x.getVeiculo().getPlaca().equals(placa))
                 .mapToInt(w -> w.getVeiculo().getContadorDeVezes())
                 .average().getAsDouble();
-
         return (quant/30)*100;
 
     }

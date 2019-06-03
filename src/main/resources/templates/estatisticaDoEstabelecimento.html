@@ -72,13 +72,27 @@
                     <div class="cell">Estatistica do Estabelecimento</div>
                 </div>
                 <div class="row">
-                    <div class="cell">Média de tempo dos veículos no estacionamento</div>
-                    <div class="cell"><span class="mediaTempoPermanecido" th:text="${mediaTempoPermanecido}"></span> <span>minutos.</span></div>
+                    <div class="cell">Média de tempo dos veículos no estacionamento em horas</div>
+                    <div class="cell"><span class="mediaTempoPermanecido" th:text="${mediaTempoPermanecido}"></span></div>
                 </div>
                 <div class="row">
                     <div class="cell">Média Arrecadada por hora</div>
                     <div class="cell"><span class="mediaArrecadadoHora" th:text="${mediaArrecadadoHora}"></span></div>
                 </div>
+				<div class="row">
+					<div class="cell">Porcentagem tipos dos veiculos</div>
+					<div class="cell">
+						<div class="cell">
+						<span name="porcentagemVeiculos" th:utext="${porcentagemCarros}"></span>
+						</div>
+						<div class="cell">
+						<span name="porcentagemVeiculos" th:utext="${porcentagemMotos}"></span>
+						</div>
+						<div class="cell">
+						<span name="porcentagemVeiculos" th:utext="${porcentagemCaminhonetes}"></span>
+						</div>
+					</div>
+				</div>
             </div>
 		</div>
 	</div>

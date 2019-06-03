@@ -42,7 +42,7 @@ public class EstacionamentoController {
 
 	@RequestMapping("/index")
 	public String paginaInicial() {
-		estacionamentoModel.permanenciaTodasEstadas(estadaDAO);
+		//estacionamentoModel.permanenciaTodasEstadas(estadaDAO);
 		System.out.println("Media Tempo Permanecido: " + estacionamentoModel.mediaTempoPermanecido());
 		System.out.println("Media Arrecadacao Por Hora: " + estacionamentoModel.mediaArrecadacaoHora());
 		return "index";
@@ -201,23 +201,21 @@ public class EstacionamentoController {
 
 	@RequestMapping(value = "/estatisticaDoEstabelecimento", method = RequestMethod.GET)
 	public ModelAndView estatistica(Estacionamento estacionamento) {
-
 		ModelAndView modelAndView = new ModelAndView("estatisticaDoEstabelecimento");
-
 		modelAndView.addObject("nomeEstabelecimentoInfo", estacionamentoModel.getNomeEstabelecimento());
 		modelAndView.addObject("horaAberturaInfo", estacionamentoModel.getHoraAbertura());
 		modelAndView.addObject("horaFechamentoInfo", estacionamentoModel.getHoraFechamento());
 		modelAndView.addObject("quantidadeVagasInfo", estacionamentoModel.getQuantidadeVagas());
 		modelAndView.addObject("precoInfo", estacionamentoModel.getValorHora());
-
 		DecimalFormat formato = new DecimalFormat("#.##");
-
-		modelAndView.addObject("mediaTempoPermanecido", formato.format(estacionamentoModel.mediaTempoPermanecido()));
-		modelAndView.addObject("mediaArrecadadoHora", formato.format(estacionamentoModel.mediaArrecadacaoHora()));
-
-
-
+		Double horas = estacionamentoModel.mediaTempoPermanecido()/60;
+		Double minutos = estacionamentoModel.mediaTempoPermanecido()%60;
+		String mediaHorasParaExibir = horas.intValue()+":"+minutos.intValue();
+		modelAndView.addObject("mediaTempoPermanecido", mediaHorasParaExibir);
+		modelAndView.addObject("mediaArrecadadoHora", "R$ " + formato.format(estacionamentoModel.mediaArrecadacaoHora()));
+		modelAndView.addObject("porcentagemCarros", "Carros " + formato.format(estacionamentoModel.porcentagemCarrosGeral(estadaDAO))+"%");
+		modelAndView.addObject("porcentagemMotos", "Motos " + formato.format(estacionamentoModel.porcentagemMotosGeral(estadaDAO))+"%");
+		modelAndView.addObject("porcentagemCaminhonetes", "Caminhonetes " + formato.format(estacionamentoModel.porcentagemCaminhonetesGeral(estadaDAO))+"%");
 		return modelAndView;
 	}
-	
 }

@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 import java.text.DecimalFormat;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.Month;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
@@ -119,26 +120,18 @@ public class Estacionamento {
 
 		LocalDateTime dataEntrada = LocalDateTime.now();
 		LocalTime horaEntrada = LocalTime.now();
-
 		Estada novaEstada = new Estada(dataEntrada, horaEntrada,veiculo);
-
 		this.getEstadaList().put(veiculo.getPlaca(), novaEstada);
-
 		mapEstadasAtual.put(novaEstada.getVeiculo().getPlaca(), novaEstada);
 		System.out.println("Veiculos Estacionados"+this.getEstadaList());
-
 		infoEntradaVeiculo.put("placaVeiculo", veiculo.getPlaca());
 		infoEntradaVeiculo.put("tipoVeiculo", veiculo.getTipoVeiculo());
 		infoEntradaVeiculo.put("dataEntrada", dataEntrada);
 		infoEntradaVeiculo.put("horaEntrada", horaEntrada);
 		infoEntradaVeiculo.put("novaEstada", novaEstada);
-		
-
 		System.out.println("Exibindo estada no momento da insercao inicial"+novaEstada);
-
 		EstadaDAO estadaDAO = new EstadaDAO();
 		estadaDAO.add(novaEstada);
-
 		return infoEntradaVeiculo;
 	}
 
@@ -183,12 +176,9 @@ public class Estacionamento {
 	}
 
     public StringBuilder exibeVeiculos(EstadaDAO estadaDAO) {
-		HashMap<Integer, String> infoVeiculo = new HashMap<>();
-
+		//HashMap<Integer, String> infoVeiculo = new HashMap<>();
 		StringBuilder veiculos = new StringBuilder();
-
         List<Estada> veiculosEstacionados = estadaDAO.getAll();
-        DateTimeFormatter dataFormatter = DateTimeFormatter.ofPattern("dd/MM/uuuu HH:mm");
         DateTimeFormatter horaFormatter = DateTimeFormatter.ofPattern("HH:mm");
 		int quantidadeVeiculos = this.getEstadaList().size();
 
@@ -201,16 +191,14 @@ public class Estacionamento {
 		return veiculos;
     }
 
-    public void permanenciaTodasEstadas(EstadaDAO estadaDAO) {
-        List<Estada> estadas = estadaDAO.recuperaEstadasGeral();
-        int tempoTotalEstadas = 0;
-        float contadorEstadas = 0;
-        for (int i = 0; i < estadas.size(); i++) {
-            tempoTotalEstadas += estadas.get(i).getTempoDePermanencia();
-            contadorEstadas++;
-        }
-        System.out.println("Tempo medio permanecido: "+ tempoTotalEstadas/contadorEstadas);
-    }
+	public double permanenciaEstadasPorMes(EstadaDAO estadaDAO, int mesEscolhido) {
+		List<Estada> estadas = estadaDAO.recuperaEstadasGeral();
+		double media = estadas.stream().filter(t-> t.getDataEntrada().getMonth().equals(Month.of(mesEscolhido)))
+				.mapToDouble(Estada::getTempoDePermanencia)
+				.average()
+				.getAsDouble();
+		return media;
+	}
 
 	public StringBuilder porcentagemTipoVeiculo(EstadaDAO estadaDAO) {
 		List<Estada> result = estadaDAO.getAll();
@@ -230,6 +218,28 @@ public class Estacionamento {
 
 		return barraProgresso;
 	}
+	public double porcentagemCarrosGeral(EstadaDAO estadaDAO) {
+		List<Estada> result = estadaDAO.recuperaEstadasGeral();
+		return (double)(result.stream().filter(t-> t.getVeiculo()
+				.getTipoVeiculo().equals("Carro"))
+				.count())/result.size()*100;
+	}
+
+	public double porcentagemMotosGeral(EstadaDAO estadaDAO) {
+		List<Estada> result = estadaDAO.recuperaEstadasGeral();
+		return (double)(result.stream().filter(t-> t.getVeiculo()
+				.getTipoVeiculo().equals("Moto"))
+				.count())/result.size()*100;
+
+	}
+
+	public double porcentagemCaminhonetesGeral(EstadaDAO estadaDAO) {
+		List<Estada> result = estadaDAO.recuperaEstadasGeral();
+		return (double)(result.stream().filter(t-> t.getVeiculo()
+				.getTipoVeiculo().equals("Caminhonete"))
+				.count())/result.size()*100;
+	}
+
 
 	public double mediaArrecadacaoHora() {
 		EstadaDAO estadaDAO = new EstadaDAO();
@@ -238,9 +248,7 @@ public class Estacionamento {
 				.filter(t -> t.getDataSaida() != null)
 				.mapToDouble(Estada::getValorEstada)
 				.average().getAsDouble();
-
 		double horasFuncionamento = (double)(MINUTES.between(this.getHoraAbertura(), this.getHoraFechamento())/60);
 		return (media/horasFuncionamento);
 	}
-
 }
