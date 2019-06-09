@@ -235,4 +235,18 @@ public class EstacionamentoController {
         modelAndView.addObject("porcentagemCaminhonetes", "Caminhonetes " + formato.format(estacionamentoModel.porcentagemCaminhonetesGeral(estadaDAO)) + "%");
         return modelAndView;
     }
+
+    @RequestMapping(value = "/lotacaoTabela", method = RequestMethod.GET)
+    public ModelAndView lotacao(Estacionamento estacionamento) {
+        ModelAndView modelAndView = new ModelAndView("lotacaoTabela");
+        modelAndView.addObject("nomeEstabelecimentoInfo", estacionamentoModel.getNomeEstabelecimento());
+        modelAndView.addObject("horaAberturaInfo", estacionamentoModel.getHoraAbertura());
+        modelAndView.addObject("horaFechamentoInfo", estacionamentoModel.getHoraFechamento());
+        modelAndView.addObject("quantidadeVagasInfo", estacionamentoModel.getQuantidadeVagas());
+        modelAndView.addObject("precoInfo", estacionamentoModel.getValorHora());
+        modelAndView.addObject("vagasDisponiveis", estacionamentoModel.calcQtdeVagasLivres());
+        modelAndView.addObject("infoTabela", EstacionamentoCheio.tempoMedioCheioGeral(MINUTES.between(estacionamentoModel.getHoraAbertura(), estacionamentoModel.getHoraFechamento())));
+        //System.out.println(EstacionamentoCheio.tempoMedioCheioGeral(MINUTES.between(estacionamentoModel.getHoraAbertura(), estacionamentoModel.getHoraFechamento())));
+        return modelAndView;
+    }
 }

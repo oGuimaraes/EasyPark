@@ -90,7 +90,7 @@ public class EstacionamentoCheio {
                 mostraMinuto -= 60;
                 mostraHora++;
             }
-            String exibeTempo = Estacionamento.formatadorHoras(mostraHora,mostraMinuto);
+            String exibeTempo = Estacionamento.formatadorHoras(mostraHora, mostraMinuto);
             retornaDataTempoPerCent.append("<div class='row'/>")
                     .append("<div class='cell'>").append(l.format(formatter)).append("</div>")
                     .append("<div class='cell'>").append(exibeTempo).append("</div>")
