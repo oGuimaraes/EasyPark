@@ -3,6 +3,7 @@ package com.easypark.controllers;
 import java.io.File;
 import java.io.IOException;
 import java.text.DecimalFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -133,21 +134,23 @@ public class EstacionamentoController {
     @PostMapping("/entradaVeiculo")
     public ModelAndView veiculoEstacionado(@ModelAttribute Veiculo veiculo) {
         ModelAndView modelAndView = new ModelAndView("veiculoEstacionado");
+        modelAndView.addObject("nomeEstabelecimentoInfo", estacionamentoModel.getNomeEstabelecimento());
+        modelAndView.addObject("horaAberturaInfo", estacionamentoModel.getHoraAbertura());
+        modelAndView.addObject("horaFechamentoInfo", estacionamentoModel.getHoraFechamento());
+        modelAndView.addObject("quantidadeVagasInfo", estacionamentoModel.getQuantidadeVagas());
+        modelAndView.addObject("precoInfo", estacionamentoModel.getValorHora());
+        modelAndView.addObject("vagasDisponiveis", estacionamentoModel.calcQtdeVagasLivres());
         if (estacionamentoModel.calcQtdeVagasLivres() > 0 && !(estacionamentoModel.getEstadaList().containsKey(veiculo.getPlaca()))){
             Map<String, Object> infoEntradaVeiculo = estacionamentoModel.entradaVeiculo(veiculo);
             String placaN = (String) infoEntradaVeiculo.get("placaVeiculo");
             String tipoVeiculoN = (String) infoEntradaVeiculo.get("tipoVeiculo");
             LocalDateTime dataEntradaN = (LocalDateTime) infoEntradaVeiculo.get("dataEntrada");
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/uuuu HH:mm");
-            modelAndView.addObject("placaVeiculo", placaN);
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm");
+            modelAndView.addObject("dataHoraAtual", LocalTime.now());
+            modelAndView.addObject("placaVeiculo"   , placaN);
             modelAndView.addObject("tipoVeiculo", tipoVeiculoN);
             modelAndView.addObject("dataEntrada", dataEntradaN.format(formatter));
-            modelAndView.addObject("nomeEstabelecimentoInfo", estacionamentoModel.getNomeEstabelecimento());
-            modelAndView.addObject("horaAberturaInfo", estacionamentoModel.getHoraAbertura());
-            modelAndView.addObject("horaFechamentoInfo", estacionamentoModel.getHoraFechamento());
-            modelAndView.addObject("quantidadeVagasInfo", estacionamentoModel.getQuantidadeVagas());
-            modelAndView.addObject("precoInfo", estacionamentoModel.getValorHora());
-            modelAndView.addObject("vagasDisponiveis", estacionamentoModel.calcQtdeVagasLivres());
             modelAndView.addObject("mensagem", "Entrada de veículo efetuada com sucesso");
             modelAndView.addObject("subMensagem", "");
         } else {
@@ -179,6 +182,13 @@ public class EstacionamentoController {
         ModelAndView modelAndView = new ModelAndView("veiculoSaindo");
         Map<String, Estada> mapEstada = estacionamentoModel.getEstadaList();
         Estada estadaVeiculo = mapEstada.get(placaVeiculoSaindo);
+        modelAndView.addObject("nomeEstabelecimentoInfo", estacionamentoModel.getNomeEstabelecimento());
+        modelAndView.addObject("horaAberturaInfo", estacionamentoModel.getHoraAbertura());
+        modelAndView.addObject("horaFechamentoInfo", estacionamentoModel.getHoraFechamento());
+        modelAndView.addObject("quantidadeVagasInfo", estacionamentoModel.getQuantidadeVagas());
+        modelAndView.addObject("precoInfo", estacionamentoModel.getValorHora());
+        modelAndView.addObject("vagasDisponiveis", estacionamentoModel.calcQtdeVagasLivres());
+
         if (mapEstada.containsKey(placaVeiculoSaindo)) {
             Map<String, Object> informacoesSaida = estadaVeiculo.saidaVeiculo(estacionamentoModel, placaVeiculoSaindo);
             modelAndView.addObject("placaVeiculo", placaVeiculoSaindo);
@@ -187,13 +197,9 @@ public class EstacionamentoController {
             modelAndView.addObject("dataHoraSaida", informacoesSaida.get("dataHoraSaida"));
             modelAndView.addObject("tipoVeiculo", informacoesSaida.get("tipoVeiculo"));
             DecimalFormat formato = new DecimalFormat("#.##");
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+            modelAndView.addObject("dataHoraAtual", LocalDateTime.now().format(formatter));
             modelAndView.addObject("valorAPagar", "R$" + formato.format(informacoesSaida.get("valorAPagar")));
-            modelAndView.addObject("nomeEstabelecimentoInfo", estacionamentoModel.getNomeEstabelecimento());
-            modelAndView.addObject("horaAberturaInfo", estacionamentoModel.getHoraAbertura());
-            modelAndView.addObject("horaFechamentoInfo", estacionamentoModel.getHoraFechamento());
-            modelAndView.addObject("quantidadeVagasInfo", estacionamentoModel.getQuantidadeVagas());
-            modelAndView.addObject("precoInfo", estacionamentoModel.getValorHora());
-            modelAndView.addObject("vagasDisponiveis", estacionamentoModel.calcQtdeVagasLivres());
             modelAndView.addObject("mensagem", "Saída do veículo efetuada com sucesso");
             modelAndView.addObject("subMensagem", "");
 
