@@ -87,7 +87,7 @@ public class EstacionamentoDAO implements SystemDAO<Estacionamento, String> {
 
 	@Override
 	public void update(Estacionamento n) {
-		
+
 		List<Estacionamento> ests = getAll();
 		int index = ests.indexOf(n);
 		System.out.println(index);
@@ -100,19 +100,15 @@ public class EstacionamentoDAO implements SystemDAO<Estacionamento, String> {
 
 	@Override
 	public void delete(Estacionamento est) {
-		Scanner sc = new Scanner(System.in);
-		System.out.println("Deseja realmente excluir? " + est + "\nDigitar 1 para confirmar");
-		int op = sc.nextInt();
-		if (op == 1) {
-			List<Estacionamento> ests = getAll();
-			for (int i = 0; i < ests.size(); i++) {
-				if (ests.get(i).equals(est)) {
-					ests.remove(i);
-					break;
-				}
+
+		List<Estacionamento> ests = getAll();
+		for (int i = 0; i < ests.size(); i++) {
+			if (ests.get(i).equals(est)) {
+				ests.remove(i);
+				break;
 			}
-			saveToFile(ests);
 		}
+		saveToFile(ests);
 	}
 
 	private void saveToFile(List<Estacionamento> ests) {

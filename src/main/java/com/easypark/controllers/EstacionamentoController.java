@@ -81,6 +81,7 @@ public class EstacionamentoController {
                                @RequestParam("quantidadeVagas") int quantidadeVagas,
                                @RequestParam("valorHora") Double valorHora) {
 
+        estacionamentoDAO.delete(estacionamentoModel);
         ModelAndView mv = new ModelAndView("redirect:/infoEstabelecimentoCadastrado");
 
         try {
