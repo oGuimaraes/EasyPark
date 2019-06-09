@@ -231,6 +231,12 @@ ul {
     margin-bottom: 20px;
 }
 
+.aplicacao .status {
+    color: #d20000;
+    font-family: 'Montserrat', sans-serif;
+    margin-top: 15px;
+}
+
 .aplicacao .input-radios .titulo {
     font-size: 14px;
     font-weight: 400;
