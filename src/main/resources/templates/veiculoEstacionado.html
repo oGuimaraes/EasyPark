@@ -68,46 +68,50 @@
         </div>
         <div class="blank-space"></div>
         <div class="aplicacao">
-            <h2 class="titulo">Entrada de veículo efetuada com sucesso</h2>
-            <h3>
-                Placa: <span th:text="${placaVeiculo}"></span>
-            </h3>
-            <h3>
-                Tipo: <span th:text="${tipoVeiculo}"></span>
-            </h3>
-            <h3>
-                Data/Hora entrada: <span th:text="${dataEntrada}"></span>
-            </h3>
+            <h2 id="statusEntrada" class="titulo success" th:text="${mensagem}"></h2>
+            <span class="subtitulo" th:text="${subMensagem}"></span>
+            <div class="infoVeiculoEstacionado" id="veiculoSucesso">
+                <h3>
+                    Placa: <span th:text="${placaVeiculo}"></span>
+                </h3>
+                <h3>
+                    Tipo: <span th:text="${tipoVeiculo}"></span>
+                </h3>
+                <h3>
+                    Data/Hora entrada: <span th:text="${dataEntrada}"></span>
+                </h3>
 
-            <div class="notaFiscalArea">
-                <div class="notaFiscal notaEntrada">
-                    <span class="destaque titulo" th:text="${nomeEstabelecimentoInfo}">AutoPark</span>
-                    <div class="line-dashed"></div>
-                    <span th:text="${dataEntrada}"></span>
-                    <div class="line-dashed"></div>
-                    <span class="aviso destaque">TICKET ENTRADA</span>
-                    <span class="aviso">CUPOM NÃO FISCAL</span>
-                    <div class="line-dashed"></div>
-                    <div class="infoEstada">
-                        <span class="destaque">INFORMACÕES ESTADA</span>
-                        <span>Placa: <span th:text="${placaVeiculo}"></span></span>
-                        <span>Tipo: <span th:text="${tipoVeiculo}"></span></span>
-                        <span>Data/Hora Entrada: <span th:text="${dataEntrada}"></span></span>
+                <div class="notaFiscalArea">
+                    <div class="notaFiscal notaEntrada">
+                        <span class="destaque titulo" th:text="${nomeEstabelecimentoInfo}">AutoPark</span>
+                        <div class="line-dashed"></div>
+                        <span th:text="${dataEntrada}"></span>
+                        <div class="line-dashed"></div>
+                        <span class="aviso destaque">TICKET ENTRADA</span>
+                        <span class="aviso">CUPOM NÃO FISCAL</span>
+                        <div class="line-dashed"></div>
+                        <div class="infoEstada">
+                            <span class="destaque">INFORMACÕES ESTADA</span>
+                            <span>Placa: <span th:text="${placaVeiculo}"></span></span>
+                            <span>Tipo: <span th:text="${tipoVeiculo}"></span></span>
+                            <span>Data/Hora Entrada: <span th:text="${dataEntrada}"></span></span>
+                        </div>
+                        <div class="line-dashed"></div>
+                        <div class="codigoBarra">Codigo</div>
+                        <div class="line-dashed"></div>
+                        <span class="site">www.easyparkappsite.com</span>
                     </div>
-                    <div class="line-dashed"></div>
-                    <div class="codigoBarra">Codigo</div>
-                    <div class="line-dashed"></div>
-                    <span class="site">www.easyparkappsite.com</span>
+                </div>
+                <div class="areaBotao">
+                    <button>Imprimir</button>
                 </div>
             </div>
-            <div class="areaBotao">
-                <button>Imprimir</button>
-            </div>
+
 
         </div>
 
     </div>
-    <script th:src="@{/javascript/main.js}"></script>
+    <script th:src="@{/javascript/entrada.js}"></script>
     <script src="https://code.jquery.com/jquery-3.4.1.slim.js" integrity="sha256-BTlTdQO9/fascB1drekrDVkaKd9PkwBymMlHOiG+qLI=" crossorigin="anonymous"></script>
     <script>
         $(".btn-menu").click(function() {

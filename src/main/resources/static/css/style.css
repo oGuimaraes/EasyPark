@@ -111,7 +111,7 @@ ul {
 /* Menu Desktop */
 
 .menu-desktop {
-    width: 380px;
+    width: 260px;
     padding: 15px;
     justify-content: space-between;
     display: flex;
@@ -441,6 +441,10 @@ input:focus~.bar:after {
 
 .container-bt .progress-bar {
     padding-top: 2px;
+}
+
+#veiculoSucesso {
+    display: none;
 }
 
 .notaFiscal {

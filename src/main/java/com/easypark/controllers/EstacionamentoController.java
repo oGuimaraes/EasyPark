@@ -147,7 +147,11 @@ public class EstacionamentoController {
             modelAndView.addObject("quantidadeVagasInfo", estacionamentoModel.getQuantidadeVagas());
             modelAndView.addObject("precoInfo", estacionamentoModel.getValorHora());
             modelAndView.addObject("vagasDisponiveis", estacionamentoModel.calcQtdeVagasLivres());
+            modelAndView.addObject("mensagem", "Entrada de veículo efetuada com sucesso");
+            modelAndView.addObject("subMensagem", "");
         } else {
+            modelAndView.addObject("mensagem", "Entrada de veículo não efetuada");
+            modelAndView.addObject("subMensagem", "Veículo já estacionado no estabelecimento ou não há vagas disponíveis.");
             System.out.println("Entrada de veiculo nao efetuada,VEICULO JA ESTACIONADO OU NAO HA VAGAS DISPONIVEIS");
         }
 
@@ -189,8 +193,13 @@ public class EstacionamentoController {
             modelAndView.addObject("quantidadeVagasInfo", estacionamentoModel.getQuantidadeVagas());
             modelAndView.addObject("precoInfo", estacionamentoModel.getValorHora());
             modelAndView.addObject("vagasDisponiveis", estacionamentoModel.calcQtdeVagasLivres());
+            modelAndView.addObject("mensagem", "Saída do veículo efetuada com sucesso");
+            modelAndView.addObject("subMensagem", "");
+
             estadaDAO.delete(estadaVeiculo);
         } else {
+            modelAndView.addObject("mensagem", "Saída não efetuada");
+            modelAndView.addObject("subMensagem", "O veiculo cuja a placa " + placaVeiculoSaindo + " não se encontra estacionado no momento.");
             System.out.println("Saida de veiculo nao realizada. Veiculo com placa "+placaVeiculoSaindo+" nao consta nos veiculos estacionados!");
         }
 
