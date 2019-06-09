@@ -10,6 +10,7 @@
 <meta name="Author" contents="Otávio Guimarães, Daniel Lyncon">
 <link href="https://fonts.googleapis.com/css?family=PT+Sans"
 	rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Libre+Barcode+39&display=swap" rel="stylesheet">
 <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}" />
 <link rel="stylesheet"
 	href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
@@ -69,14 +70,13 @@
 			</div>
 		</div>
 		<div class="blank-space"></div>
-		<div class="aplicacao">
-
+		<div class="aplicacao" id="placaExiste">
 			<h2 class="titulo">Saida de veículo efetuada com sucesso</h2>
 			<h3>
 				Placa: <span th:text="${placaVeiculo}"></span>
 			</h3>
 			<h3>
-				Tipo: <span th:text="${tipoVeiculo}"></span>
+				Tipo: <span id="checkPlaca" th:text="${tipoVeiculo}"></span>
 			</h3>
 			<h3>
 				Data/Hora entrada: <span th:text="${dataHoraEntrada}"></span>
@@ -94,7 +94,53 @@
 				Valor a pagar: <span th:text="${valorAPagar}"></span>
 			</h3>
 
+			<div class="notaFiscalArea">
+				<div class="notaFiscal notaEntrada">
+					<span class="destaque titulo" th:text="${nomeEstabelecimentoInfo}">AutoPark</span>
+					<div class="line-dashed"></div>
+					<span th:text="${dataHoraEntrada}"></span>
+					<div class="line-dashed"></div>
+					<span class="aviso destaque">TICKET SAÍDA</span>
+					<span class="aviso">CUPOM NÃO FISCAL</span>
+					<div class="line-dashed"></div>
+					<div class="infoEstada">
+						<span class="destaque">INFORMACÕES ESTADA</span>
+						<span>Placa: <span th:text="${placaVeiculo}"></span></span>
+						<span>Tipo: <span th:text="${tipoVeiculo}"></span></span>
+						<span>Data/Hora Entrada: <span th:text="${dataHoraEntrada}"></span></span>
+						<br>
+						<span>Data/Hora Saída: <span th:text="${dataHoraSaida}"></span></span>
+						<span>Permancencia: <span th:text="${tempoPermanecido}"></span></span>
+						<br>
+						<div class="line-dashed"></div>
+						<div class="pagamento">
+							<span class="destaque">PAGAMENTOS</span>
+							<span>CÁLCULO</span>
+							<div class="divisoes">
+								<div class="cell"><span>Tempo Permanecido</span></div>
+								<div class="cell"><span>Valor Hora</span></div>
+								<div class="cell"><span class="destaque">TOTAL</span></div>
+							</div>
+
+							<div class="divisoes">
+								<div class="cell"><span th:text="${tempoPermanecido}"></div>
+								<div class="cell"><span th:text="${precoInfo}"></div>
+								<div class="cell"><span class="destaque" th:text="${valorAPagar}"></div>
+							</div>
+						</div>
+					</div>
+					<div class="line-dashed"></div>
+					<div class="codigoBarra">Codigo</div>
+					<div class="line-dashed"></div>
+					<span class="site">www.easyparkappsite.com</span>
+				</div>
+			</div>
+			<div class="areaBotao">
+				<button>Imprimir</button>
+			</div>
 		</div>
+
+	</div>
 </body>
 <footer class="footer">
 
@@ -111,6 +157,4 @@
 		$(".menu-mobile").hide();
 	})
 </script>
-</body>
-
 </html>

@@ -154,7 +154,7 @@ public class EstacionamentoDAO implements SystemDAO<Estacionamento, String> {
 				/* Converte String para tipo correto */
 				LocalTime horaAbertura = LocalTime.parse(horaAberturaStr);
 				LocalTime horaFechamento = LocalTime.parse(horaFechamentoStr);
-				
+
 				estacionamento = new Estacionamento (nomeEstacionamento, horaAbertura, horaFechamento, quantidadeVagas, valorHora);
 				System.out.println(estacionamento.toString());
 

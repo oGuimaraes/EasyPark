@@ -166,7 +166,7 @@ public class EstadaDAO implements SystemDAO<Estada, String> {
 
 				/* Adiciona a estada na lista de estadas do Estacionamento */
 				estacionamento.getEstadaList().put(placaVeiculo, estada);
-
+				estacionamento.setQtdVeiculosEstacionados(estacionamento.getEstadaList().size());
 				System.out.println("Data Entrada: " + dataEntradaStr);
 				System.out.println("Hora Entrada: " + horaEntradaStr);
 				System.out.println("Placa: " + placaVeiculo);

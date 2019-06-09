@@ -47,30 +47,29 @@ public class Estada {
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/uuuu HH:mm");
         estadaVeiculo.setDataSaida(LocalDateTime.now());
-        estadaVeiculo.setHoraSaida(LocalTime.now().plusHours(2));
+        estadaVeiculo.setHoraSaida(LocalTime.now());
 
         long begin = estadaVeiculo.getDataEntrada().atOffset(ZoneOffset.UTC).toInstant().toEpochMilli();
         long end = estadaVeiculo.getDataSaida().atOffset(ZoneOffset.UTC).toInstant().toEpochMilli();
         long diferencaMili = end - begin;
-        System.out.println(diferencaMili/60000);
 
-        double minutosPermanecidos = (double) diferencaMili/60000;;
+        double minutosPermanecidos = (double) diferencaMili / 60000;
         estadaVeiculo.setTempoDePermanencia(minutosPermanecidos);
-        double horasPermanecidas = (double) diferencaMili/3600000;
+        double horasPermanecidas = (double) diferencaMili / 3600000;
 
-        System.out.println("Imprimindo minutos: "+ minutosPermanecidos);
-        System.out.println("Imprimindo horas: "+ horasPermanecidas);
+        System.out.println("Imprimindo minutos: " + minutosPermanecidos);
+        System.out.println("Imprimindo horas: " + horasPermanecidas);
 
         estadaVeiculo.calculaValor(horasPermanecidas, minutosPermanecidos, estacionamento.getValorHora());
 
         int mostraHora = 0;
-        int mostraMinuto = (int) diferencaMili/60000;
+        int mostraMinuto = (int) diferencaMili / 60000;
         while (mostraMinuto > 59) {
             mostraMinuto -= 60;
             mostraHora++;
         }
 
-        String tempoPermanecido = mostraHora+":"+mostraMinuto;
+        String tempoPermanecido  = Estacionamento.formatadorHoras(mostraHora, mostraMinuto);
 
         //View
         infoSaidaVeiculo.put("tempoPermanecido", tempoPermanecido);
@@ -80,6 +79,7 @@ public class Estada {
         infoSaidaVeiculo.put("valorAPagar", estadaVeiculo.getValorEstada());
 
         estacionamento.getEstadaList().remove(placa);
+        estacionamento.setQtdVeiculosEstacionados(estacionamento.getEstadaList().size());
         EstadaDAO estadaDAO = new EstadaDAO();
         estadaDAO.update(estadaVeiculo);
         estadaDAO.adicionaEstadasGeral(estadaVeiculo);
@@ -126,15 +126,11 @@ public class Estada {
     }
 
     public void calculaValor(double horasPermanecidas, double minutosPermanecidos, double valorHora) {
-        double valorAPagar;
-        double valorHoraSemMinutos = (valorHora * horasPermanecidas);
-        double valorMinutos = ((valorHora / 60) * minutosPermanecidos);
-        valorAPagar = valorMinutos;
-        setValorEstada(valorAPagar);
-        if (valorAPagar < 0) {
-        	valorAPagar = valorAPagar * (-1);
+        if (minutosPermanecidos <= 59) {
+            setValorEstada((valorHora / 60) * minutosPermanecidos);
+        } else {
+            setValorEstada(((valorHora / 60) * minutosPermanecidos) + (valorHora * horasPermanecidas));
         }
-        this.valorEstada = (valorAPagar);
     }
 
     public double getTempoDePermanencia() {
@@ -182,27 +178,26 @@ public class Estada {
     public void setDataSaida(LocalDateTime dataSaida) {
         this.dataSaida = dataSaida;
     }
-    
-    public LocalTime tempoAtualEstada() {
-        long minutosPermanecidos = this.getHoraEntrada().until(LocalTime.now(), ChronoUnit.MINUTES);
-        long horasPermanecidas = 0;
-        while (minutosPermanecidos > 59) {
-            minutosPermanecidos -= 60;
-            horasPermanecidas++;
-        }
-        LocalTime tempoPermanecido = LocalTime.of((int) horasPermanecidas,(int) minutosPermanecidos);
-        return tempoPermanecido;
+
+    public String tempoAtualEstada() {
+        long inicio = this.getDataEntrada().atOffset(ZoneOffset.UTC).toInstant().toEpochMilli();
+        long fim = LocalDateTime.now().atOffset(ZoneOffset.UTC).toInstant().toEpochMilli();
+        long diferencaMili = fim - inicio;
+        int minutosPermanecidos = (int) diferencaMili / 60000;
+        int horasPermanecidas = minutosPermanecidos / 60;
+        minutosPermanecidos = minutosPermanecidos % 60;
+        return Estacionamento.formatadorHoras(horasPermanecidas,minutosPermanecidos);
     }
 
     public double taxaDeRetorno(String placa) {
         EstadaDAO estadaDAO = new EstadaDAO();
         double quant = 0;
         List<Estada> result = estadaDAO.recuperaEstadasGeral();
-        quant  = result.stream()
+        quant = result.stream()
                 .filter(x -> x.getVeiculo().getPlaca().equals(placa))
                 .mapToInt(w -> w.getVeiculo().getContadorDeVezes())
                 .average().getAsDouble();
-        return (quant/30)*100;
+        return (quant / 30) * 100;
 
     }
 

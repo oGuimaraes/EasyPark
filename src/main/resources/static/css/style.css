@@ -168,12 +168,6 @@ ul {list-style: none;}
     border: 1px solid #222;
 }
 
-::-webkit-datetime-edit-hour-field:focus,
-::-webkit-datetime-edit-minute-field:focus,
-::-webkit-datetime-edit-text:focus {
-    color: black;
-}
-
 .aplicacao {
     display: flex;
     margin-right: 20px;
@@ -370,6 +364,7 @@ label 				 {
 .container-bt .progress {
     margin-top: 8px;
     height: 26px;
+    width: 600px;
     width: 400px;
     margin-bottom: 50px;
     border: 1px solid #dedede;
@@ -379,9 +374,100 @@ label 				 {
 padding-top: 2px;
 }
 
+.notaFiscal {
+    font-size: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: white;
+    width: 100%;
+    max-width: 300px;
+    margin-top: 40px;
+    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e0e0e0;
+    padding: 15px 10px;
+}
+
+.notaFiscal br {
+   display: block;
+   margin: 3px 0;
+}
+
+.notaFiscal .titulo {
+    font-size: 13px;
+    margin-bottom: 0px;
+}
+.notaFiscal span {
+    font-family: Tahoma, Geneva, sans-serif; 
+    margin-bottom: 1px;
+}
+
+.notaFiscal div {
+    font-family: Tahoma, Geneva, sans-serif; 
+}
+
+.notaFiscal .destaque {
+    font-size: 11px;
+    font-weight: 800;   
+}
+
+.notaFiscal .infoEstada {
+   display: flex;
+   flex-direction: column;
+   align-items: flex-start;
+   width: 100%;
+}
+
+.notaFiscal .divisoes {
+    display: flex;
+    justify-content: space-between;
+}
+
+.notaFiscal .divisoes .cell {
+    width: 115px;
+}
+
+.notaFiscal .cell .destaque {
+    font-size: 10px;
+    font-weight: 800;   
+}
+
+.notaFiscal .codigoBarra {
+    font-family: 'Libre Barcode 39', cursive;
+    margin-top: 20px;
+    font-size: 60px;
+}
+
+.notaFiscal .pagamento {
+    display: flex;
+    flex-direction: column;
+}
+
+.areaBotao {
+    margin-top: 15px;
+    width: 300px;
+    display: flex;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.areaBotao button {
+    border: 1px solid gray;
+    padding: 3px 5px;
+    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    font-size: 13px;
+    border-radius: 3px;
+}
+
+.notaFiscal .line-dashed {
+    border-bottom: 1px dashed #bcbcbc;
+    margin: 8px auto;
+    width: 98%;
+}
+
 .footer {
     height: 30px;
 }
-
 
 
