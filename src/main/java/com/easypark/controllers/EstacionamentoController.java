@@ -44,10 +44,17 @@ public class EstacionamentoController {
     }
 
     @RequestMapping("/index")
-    public String paginaInicial() {
+    public ModelAndView paginaInicial() {
         //estacionamentoModel.permanenciaTodasEstadas(estadaDAO);
-        EstacionamentoCheio.tempoMedioCheioGeral(MINUTES.between(estacionamentoModel.getHoraAbertura(),estacionamentoModel.getHoraFechamento()));
-        return "index";
+        //EstacionamentoCheio.tempoMedioCheioGeral(MINUTES.between(estacionamentoModel.getHoraAbertura(),estacionamentoModel.getHoraFechamento()));
+        ModelAndView modelAndView = new ModelAndView("index");
+        modelAndView.addObject("nomeEstabelecimentoInfo", estacionamentoModel.getNomeEstabelecimento());
+        modelAndView.addObject("horaAberturaInfo", estacionamentoModel.getHoraAbertura());
+        modelAndView.addObject("horaFechamentoInfo", estacionamentoModel.getHoraFechamento());
+        modelAndView.addObject("quantidadeVagasInfo", estacionamentoModel.getQuantidadeVagas());
+        modelAndView.addObject("precoInfo", estacionamentoModel.getValorHora());
+        modelAndView.addObject("vagasDisponiveis", estacionamentoModel.calcQtdeVagasLivres());
+        return modelAndView;
     }
 
     @RequestMapping("/")
@@ -139,7 +146,6 @@ public class EstacionamentoController {
         modelAndView.addObject("horaFechamentoInfo", estacionamentoModel.getHoraFechamento());
         modelAndView.addObject("quantidadeVagasInfo", estacionamentoModel.getQuantidadeVagas());
         modelAndView.addObject("precoInfo", estacionamentoModel.getValorHora());
-        modelAndView.addObject("vagasDisponiveis", estacionamentoModel.calcQtdeVagasLivres());
         if (estacionamentoModel.calcQtdeVagasLivres() > 0 && !(estacionamentoModel.getEstadaList().containsKey(veiculo.getPlaca()))){
             Map<String, Object> infoEntradaVeiculo = estacionamentoModel.entradaVeiculo(veiculo);
             String placaN = (String) infoEntradaVeiculo.get("placaVeiculo");
@@ -153,10 +159,12 @@ public class EstacionamentoController {
             modelAndView.addObject("dataEntrada", dataEntradaN.format(formatter));
             modelAndView.addObject("mensagem", "Entrada de veículo efetuada com sucesso");
             modelAndView.addObject("subMensagem", "");
+            modelAndView.addObject("vagasDisponiveis", estacionamentoModel.calcQtdeVagasLivres());
         } else {
             modelAndView.addObject("mensagem", "Entrada de veículo não efetuada");
             modelAndView.addObject("subMensagem", "Veículo já estacionado no estabelecimento ou não há vagas disponíveis.");
             System.out.println("Entrada de veiculo nao efetuada,VEICULO JA ESTACIONADO OU NAO HA VAGAS DISPONIVEIS");
+            modelAndView.addObject("vagasDisponiveis", estacionamentoModel.calcQtdeVagasLivres());
         }
 
         return modelAndView;
@@ -187,7 +195,6 @@ public class EstacionamentoController {
         modelAndView.addObject("horaFechamentoInfo", estacionamentoModel.getHoraFechamento());
         modelAndView.addObject("quantidadeVagasInfo", estacionamentoModel.getQuantidadeVagas());
         modelAndView.addObject("precoInfo", estacionamentoModel.getValorHora());
-        modelAndView.addObject("vagasDisponiveis", estacionamentoModel.calcQtdeVagasLivres());
 
         if (mapEstada.containsKey(placaVeiculoSaindo)) {
             Map<String, Object> informacoesSaida = estadaVeiculo.saidaVeiculo(estacionamentoModel, placaVeiculoSaindo);
@@ -202,12 +209,14 @@ public class EstacionamentoController {
             modelAndView.addObject("valorAPagar", "R$" + formato.format(informacoesSaida.get("valorAPagar")));
             modelAndView.addObject("mensagem", "Saída do veículo efetuada com sucesso");
             modelAndView.addObject("subMensagem", "");
+            modelAndView.addObject("vagasDisponiveis", estacionamentoModel.calcQtdeVagasLivres());
 
             estadaDAO.delete(estadaVeiculo);
         } else {
             modelAndView.addObject("mensagem", "Saída não efetuada");
             modelAndView.addObject("subMensagem", "O veiculo cuja a placa " + placaVeiculoSaindo + " não se encontra estacionado no momento.");
             System.out.println("Saida de veiculo nao realizada. Veiculo com placa "+placaVeiculoSaindo+" nao consta nos veiculos estacionados!");
+            modelAndView.addObject("vagasDisponiveis", estacionamentoModel.calcQtdeVagasLivres());
         }
 
 		return modelAndView;

@@ -255,7 +255,33 @@ ul {
 }
 
 .info-estacionamento {
+    display: flex;
+    flex-direction: column;
     font-size: 13px;
+    background-color: white;
+    padding: 8px 8px;
+    border-radius: 3px;
+    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1);
+    border: 1px dashed #91b946;
+}
+
+.info-estacionamento span {
+    font-family: 'Montserrat', sans-serif;
+}
+
+.info-estacionamento .nomeEstabelecimento {
+    width: 100%;
+    text-align: center;
+    font-weight: bold;
+    color: #91b946;
+    font-size: 15px;
+}
+
+.info-estacionamento .destaque {
+    font-weight: 900;
+    margin-top: 10px;
+    margin-bottom: 8px;
+    font-size: 15px;
 }
 
 

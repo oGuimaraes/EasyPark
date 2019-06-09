@@ -7,6 +7,7 @@
     <title>EasyPark</title>
     <meta name="description" content="Sistema de Estacionamento - EasyPark">
     <meta name="Author" contents="Otávio Guimarães, Daniel Lyncon">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=PT+Sans" rel="stylesheet">
     <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}" />
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
@@ -52,17 +53,12 @@
                 </li>
             </ul>
             <div id="divInfo" class="info-estacionamento">
-                <span id="nomeEstabelecimento" th:text="${nomeEstabelecimentoInfo}"></span><br>
-                <span>Quantidade de vagas disponiveis:</span>
-                <span name="vagasDisponiveis" th:text="${vagasDisponiveis}"></span><br>
-                <span>Hora de Abertura: </span>
-                <span name="horaAberturaInfo" th:text="${horaAberturaInfo}">Hora Abertura</span><br>
-                <span>Hora de Fechamento: </span>
-                <span name="horaFechamentoInfo" th:text="${horaFechamentoInfo}">Hora Fechamento</span><br>
-                <span>Quantidade de vagas totais: </span>
-                <span name="quantidadeVagasInfo" th:text="${quantidadeVagasInfo}">Quantidade de Vagas Disponiveis</span><br>
-                <span>Valor Hora: R$</span>
-                <span name="precoInfo" th:text="${precoInfo}">Preço Hora</span>
+                <span class="nomeEstabelecimento" id="nomeEstabelecimento" th:text="${nomeEstabelecimentoInfo}"></span>
+                <span class="destaque">Vagas disponiveis: <span class="destaque" name="vagasDisponiveis" th:text="${vagasDisponiveis}"></span> </span>
+                <span>Hora de Abertura: <span name="horaAberturaInfo" th:text="${horaAberturaInfo}">Hora Abertura</span></span>
+                <span>Hora de Fechamento: <span name="horaFechamentoInfo" th:text="${horaFechamentoInfo}"></span> </span>
+                <span>Vagas Totais: <span name="quantidadeVagasInfo" th:text="${quantidadeVagasInfo}"></span></span>
+                <span>Valor Hora: R$ <span name="precoInfo" th:text="${precoInfo}"></span></span>
             </div>
         </div>
         <div class="blank-space"></div>
