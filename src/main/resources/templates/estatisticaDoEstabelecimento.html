@@ -16,7 +16,6 @@
 
 <body>
     <div class="cabecalho">
-        <a href="../../../../../../../../Workspace/Java/EasyPark(Danie)/EasyPark/src/main/resources/templates/index.html">
             <h1 class="logo">EasyPark - Gestão de Estacionamento</h1>
         </a>
         <button class="btn-menu">
@@ -75,6 +74,13 @@
                 <div class="row">
                     <div class="cell">Média Arrecadada por hora</div>
                     <div class="cell"><span class="mediaArrecadadoHora" th:text="${mediaArrecadadoHora}"></span></div>
+                </div>
+                <div class="row">
+                    <div class="cell">
+                        <span>Total de Veiculos Estacionados</span><br>
+                        <span class="detalhe">(Geral + Atual)</span>
+                    </div>
+                    <div class="cell"><span class="totalVeiculos" th:text="${quantidadeTotalVeiculos}"></span></div>
                 </div>
                 <div class="row">
                     <div class="cell">Porcentagem tipos dos veiculos</div>

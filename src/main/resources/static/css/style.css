@@ -415,6 +415,10 @@ input:focus~.bar:after {
     margin-bottom: 20px;
 }
 
+.tabela .detalhe {
+    font-size: 13px;
+}
+
 .estatistica {
     margin-top: 15px;
 }

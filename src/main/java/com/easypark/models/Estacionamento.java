@@ -216,6 +216,14 @@ public class Estacionamento {
         return barraProgresso;
     }
 
+    public int totalCarrosEstacionados(EstadaDAO estadaDAO){
+        List<Estada> result = estadaDAO.recuperaEstadasGeral();
+        System.out.println(result.size());
+        System.out.println(getEstadaList().size());
+        System.out.println(result.size() + getEstadaList().size());
+        return result.size() + getEstadaList().size();
+    }
+
     public double porcentagemCarrosGeral(EstadaDAO estadaDAO) {
         List<Estada> result = estadaDAO.recuperaEstadasGeral();
         return (double) (result.stream().filter(t -> t.getVeiculo()

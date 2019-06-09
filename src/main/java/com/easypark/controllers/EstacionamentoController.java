@@ -254,10 +254,13 @@ public class EstacionamentoController {
         String mediaHorasParaExibir = Estacionamento.formatadorHoras((int)horas,(int)minutos);
 
         modelAndView.addObject("mediaTempoPermanecido", mediaHorasParaExibir);
+        modelAndView.addObject("quantidadeTotalVeiculos", estacionamentoModel.totalCarrosEstacionados(estadaDAO) + " veículos");
         modelAndView.addObject("mediaArrecadadoHora", "R$ " + formato.format(estacionamentoModel.mediaArrecadacaoHora()));
         modelAndView.addObject("porcentagemCarros", "Carros " + formato.format(estacionamentoModel.porcentagemCarrosGeral(estadaDAO)) + "%");
         modelAndView.addObject("porcentagemMotos", "Motos " + formato.format(estacionamentoModel.porcentagemMotosGeral(estadaDAO)) + "%");
         modelAndView.addObject("porcentagemCaminhonetes", "Caminhonetes " + formato.format(estacionamentoModel.porcentagemCaminhonetesGeral(estadaDAO)) + "%");
+
+        estacionamentoModel.totalCarrosEstacionados(estadaDAO);
         return modelAndView;
     }
 
