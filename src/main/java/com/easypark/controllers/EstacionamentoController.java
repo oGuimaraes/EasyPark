@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
-
+import static java.time.temporal.ChronoUnit.MINUTES;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -32,6 +32,10 @@ public class EstacionamentoController {
         if (!x.exists()) {
             x.createNewFile();
         }
+        File g = new File("estacionamentoCheio.txt");
+        if (!g.exists()){
+            g.createNewFile();
+        }
         File z = new File("estadasGeral.txt");
         if (!z.exists()) {
             z.createNewFile();
@@ -41,7 +45,7 @@ public class EstacionamentoController {
     @RequestMapping("/index")
     public String paginaInicial() {
         //estacionamentoModel.permanenciaTodasEstadas(estadaDAO);
-        System.out.println("mostrando vagas disponiveis" + estacionamentoModel.calcQtdeVagasLivres());
+        EstacionamentoCheio.tempoMedioCheioGeral(MINUTES.between(estacionamentoModel.getHoraAbertura(),estacionamentoModel.getHoraFechamento()));
         return "index";
     }
 
@@ -50,18 +54,24 @@ public class EstacionamentoController {
         estacionamentoModel = estacionamentoDAO.instanciaEstacionamento();
         estadaDAO.instanciaEstadas(estacionamentoModel);
 
+        try {
+            criaArquivo();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return "index";
     }
 
     @RequestMapping(value = "/cadastroEstabelecimento", method = RequestMethod.GET)
     public ModelAndView informacoes(Estacionamento estacionamento) {
-        ModelAndView mv = new ModelAndView("cadastroEstabelecimento");
-        mv.addObject("nomeEstabelecimentoInfo", estacionamentoModel.getNomeEstabelecimento());
-        mv.addObject("horaAberturaInfo", estacionamentoModel.getHoraAbertura());
-        mv.addObject("horaFechamentoInfo", estacionamentoModel.getHoraFechamento());
-        mv.addObject("quantidadeVagasInfo", estacionamentoModel.getQuantidadeVagas());
-        mv.addObject("precoInfo", estacionamentoModel.getValorHora());
-        return mv;
+        ModelAndView modelAndView = new ModelAndView("cadastroEstabelecimento");
+        modelAndView.addObject("nomeEstabelecimentoInfo", estacionamentoModel.getNomeEstabelecimento());
+        modelAndView.addObject("horaAberturaInfo", estacionamentoModel.getHoraAbertura());
+        modelAndView.addObject("horaFechamentoInfo", estacionamentoModel.getHoraFechamento());
+        modelAndView.addObject("quantidadeVagasInfo", estacionamentoModel.getQuantidadeVagas());
+        modelAndView.addObject("precoInfo", estacionamentoModel.getValorHora());
+        modelAndView.addObject("vagasDisponiveis", estacionamentoModel.calcQtdeVagasLivres());
+        return modelAndView;
     }
 
     @RequestMapping(value = "/cadastroEstabelecimento", method = RequestMethod.POST)
@@ -95,6 +105,7 @@ public class EstacionamentoController {
         modelAndView.addObject("valorHora", valorHora);
         modelAndView.addObject("horaAbertura", horaAberturaFormat);
         modelAndView.addObject("horaFechamento", horaFechamentoFormat);
+        modelAndView.addObject("vagasDisponiveis", estacionamentoModel.calcQtdeVagasLivres());
 
         estacionamentoDAO.add(estacionamentoModel);
 
@@ -113,7 +124,7 @@ public class EstacionamentoController {
         modelAndView.addObject("horaFechamentoInfo", estacionamentoModel.getHoraFechamento());
         modelAndView.addObject("quantidadeVagasInfo", estacionamentoModel.getQuantidadeVagas());
         modelAndView.addObject("precoInfo", estacionamentoModel.getValorHora());
-        modelAndView.addObject("qtdVagasLivres", estacionamentoModel.calcQtdeVagasLivres());
+        modelAndView.addObject("vagasDisponiveis", estacionamentoModel.calcQtdeVagasLivres());
         return modelAndView;
 
     }
@@ -135,11 +146,10 @@ public class EstacionamentoController {
             modelAndView.addObject("horaFechamentoInfo", estacionamentoModel.getHoraFechamento());
             modelAndView.addObject("quantidadeVagasInfo", estacionamentoModel.getQuantidadeVagas());
             modelAndView.addObject("precoInfo", estacionamentoModel.getValorHora());
+            modelAndView.addObject("vagasDisponiveis", estacionamentoModel.calcQtdeVagasLivres());
         } else {
             System.out.println("Entrada de veiculo nao efetuada,VEICULO JA ESTACIONADO OU NAO HA VAGAS DISPONIVEIS");
         }
-
-
 
         return modelAndView;
     }
@@ -152,9 +162,10 @@ public class EstacionamentoController {
         modelAndView.addObject("horaFechamentoInfo", estacionamentoModel.getHoraFechamento());
         modelAndView.addObject("quantidadeVagasInfo", estacionamentoModel.getQuantidadeVagas());
         modelAndView.addObject("precoInfo", estacionamentoModel.getValorHora());
+        modelAndView.addObject("vagasDisponiveis", estacionamentoModel.getQtdVeiculosEstacionados());
 
         model.addAttribute("veiculo", new Veiculo());
-        modelAndView.addObject("qtdVagasLivres", estacionamentoModel.calcQtdeVagasLivres());
+        modelAndView.addObject("vagasDisponiveis", estacionamentoModel.calcQtdeVagasLivres());
         return modelAndView;
     }
 
@@ -177,6 +188,7 @@ public class EstacionamentoController {
             modelAndView.addObject("horaFechamentoInfo", estacionamentoModel.getHoraFechamento());
             modelAndView.addObject("quantidadeVagasInfo", estacionamentoModel.getQuantidadeVagas());
             modelAndView.addObject("precoInfo", estacionamentoModel.getValorHora());
+            modelAndView.addObject("vagasDisponiveis", estacionamentoModel.calcQtdeVagasLivres());
             estadaDAO.delete(estadaVeiculo);
         } else {
             System.out.println("Saida de veiculo nao realizada. Veiculo com placa "+placaVeiculoSaindo+" nao consta nos veiculos estacionados!");
@@ -197,6 +209,7 @@ public class EstacionamentoController {
         modelAndView.addObject("horaFechamentoInfo", estacionamentoModel.getHoraFechamento());
         modelAndView.addObject("quantidadeVagasInfo", estacionamentoModel.getQuantidadeVagas());
         modelAndView.addObject("precoInfo", estacionamentoModel.getValorHora());
+        modelAndView.addObject("vagasDisponiveis", estacionamentoModel.calcQtdeVagasLivres());
         return modelAndView;
     }
 
@@ -208,11 +221,12 @@ public class EstacionamentoController {
         modelAndView.addObject("horaFechamentoInfo", estacionamentoModel.getHoraFechamento());
         modelAndView.addObject("quantidadeVagasInfo", estacionamentoModel.getQuantidadeVagas());
         modelAndView.addObject("precoInfo", estacionamentoModel.getValorHora());
+        modelAndView.addObject("vagasDisponiveis", estacionamentoModel.calcQtdeVagasLivres());
         DecimalFormat formato = new DecimalFormat("#.##");
 
         double horas = estacionamentoModel.mediaTempoPermanecido() / 60;
         double minutos = estacionamentoModel.mediaTempoPermanecido() % 60;
-        String mediaHorasParaExibir = estacionamentoModel.formatadorHoras((int)horas,(int)minutos);
+        String mediaHorasParaExibir = Estacionamento.formatadorHoras((int)horas,(int)minutos);
 
         modelAndView.addObject("mediaTempoPermanecido", mediaHorasParaExibir);
         modelAndView.addObject("mediaArrecadadoHora", "R$ " + formato.format(estacionamentoModel.mediaArrecadacaoHora()));

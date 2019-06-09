@@ -79,6 +79,7 @@ public class Estada {
         infoSaidaVeiculo.put("valorAPagar", estadaVeiculo.getValorEstada());
 
         estacionamento.getEstadaList().remove(placa);
+        estacionamento.encerraContagem();
         estacionamento.setQtdVeiculosEstacionados(estacionamento.getEstadaList().size());
         EstadaDAO estadaDAO = new EstadaDAO();
         estadaDAO.update(estadaVeiculo);

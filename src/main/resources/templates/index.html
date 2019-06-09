@@ -7,7 +7,7 @@
     <title>EasyPark</title>
     <meta name="description" content="Sistema de Estacionamento - EasyPark">
     <meta name="Author" contents="Otávio Guimarães, Daniel Lyncon">
-	<link rel="stylesheet" type="text/css" th:href="@{/css/style.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}" />
     <link href="https://fonts.googleapis.com/css?family=PT+Sans" rel="stylesheet">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
     <link rel="icon" href="../images/icon.png" />
@@ -21,7 +21,7 @@
         <button class="btn-menu"><i class="fa fa-bars fa-lg"></i></button>
         <nav class="menu-mobile">
             <div class="container-close">
-                    <a class="btn-close">x</a>
+                <a class="btn-close">x</a>
             </div>
             <div class="menu-contents">
                 <ul>
@@ -48,17 +48,19 @@
                     </ul>
                 </li>
             </ul>
-			<div id="divInfo" class="info-estacionamento">
-				<span id="nomeEstabelecimento" th:text="${nomeEstabelecimentoInfo}"></span><br>
-				<span>Hora de Abertura: </span>
-				<span name="horaAberturaInfo" th:text="${horaAberturaInfo}">Hora Abertura</span><br>
-				<span>Hora de Fechamento: </span>
-				<span name="horaFechamentoInfo" th:text="${horaFechamentoInfo}">Hora Fechamento</span><br>
-				<span>Quantidade de vagas totais: </span>
-				<span name="quantidadeVagasInfo" th:text="${quantidadeVagasInfo}">Quantidade de Vagas Disponiveis</span><br>
-				<span>Valor Hora: R$</span>
-				<span name="precoInfo" th:text="${precoInfo}">Preço Hora</span>
-			</div>
+            <div id="divInfo" class="info-estacionamento">
+                <span id="nomeEstabelecimento" th:text="${nomeEstabelecimentoInfo}"></span><br>
+                <span>Quantidade de vagas disponiveis:</span>
+                <span name="vagasDisponiveis" th:text="${vagasDisponiveis}"></span><br>
+                <span>Hora de Abertura: </span>
+                <span name="horaAberturaInfo" th:text="${horaAberturaInfo}">Hora Abertura</span><br>
+                <span>Hora de Fechamento: </span>
+                <span name="horaFechamentoInfo" th:text="${horaFechamentoInfo}">Hora Fechamento</span><br>
+                <span>Quantidade de vagas totais: </span>
+                <span name="quantidadeVagasInfo" th:text="${quantidadeVagasInfo}">Quantidade de Vagas Disponiveis</span><br>
+                <span>Valor Hora: R$</span>
+                <span name="precoInfo" th:text="${precoInfo}">Preço Hora</span>
+            </div>
         </div>
 
         <div class="blank-space"></div>
@@ -69,14 +71,14 @@
     <script th:src="@{/javascript/main.js}"></script>
     <script src="https://code.jquery.com/jquery-3.4.1.slim.js" integrity="sha256-BTlTdQO9/fascB1drekrDVkaKd9PkwBymMlHOiG+qLI=" crossorigin="anonymous"></script>
     <script>
-        $(".btn-menu").click(function(){
+        $(".btn-menu").click(function() {
             $(".menu-mobile").show();
         })
-        $(".btn-close").click(function(){
+        $(".btn-close").click(function() {
             $(".menu-mobile").hide();
         })
     </script>
-    <script  th:src="@{/javascript/main.js}"></script>
+    <script th:src="@{/javascript/main.js}"></script>
 </body>
 
 </html>
