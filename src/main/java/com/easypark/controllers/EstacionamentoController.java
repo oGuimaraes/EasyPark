@@ -123,6 +123,44 @@ public class EstacionamentoController {
 
         return modelAndView;
     }
+    
+    @GetMapping("/taxaDeRetorno")
+    public ModelAndView taxaRetornoForm(Model model) {
+        ModelAndView modelAndView = new ModelAndView("taxaDeRetorno");
+        modelAndView.addObject("nomeEstabelecimentoInfo", estacionamentoModel.getNomeEstabelecimento());
+        modelAndView.addObject("horaAberturaInfo", estacionamentoModel.getHoraAbertura());
+        modelAndView.addObject("horaFechamentoInfo", estacionamentoModel.getHoraFechamento());
+        modelAndView.addObject("quantidadeVagasInfo", estacionamentoModel.getQuantidadeVagas());
+        modelAndView.addObject("precoInfo", estacionamentoModel.getValorHora());
+        modelAndView.addObject("vagasDisponiveis", estacionamentoModel.getQtdVeiculosEstacionados());
+
+        model.addAttribute("veiculo", new Veiculo());
+        modelAndView.addObject("vagasDisponiveis", estacionamentoModel.calcQtdeVagasLivres());
+        return modelAndView;
+    }
+    
+    @PostMapping("/taxaDeRetorno")
+   public ModelAndView taxaDeRetorno (@RequestParam("placa") String placaVeiculo) {
+        ModelAndView modelAndView = new ModelAndView("taxaDeRetornoSecundaria");
+        Map<String, Estada> mapEstada = estacionamentoModel.getEstadaList();
+        Estada estadaVeiculo = mapEstada.get(placaVeiculo);
+        modelAndView.addObject("nomeEstabelecimentoInfo", estacionamentoModel.getNomeEstabelecimento());
+        modelAndView.addObject("horaAberturaInfo", estacionamentoModel.getHoraAbertura());
+        modelAndView.addObject("horaFechamentoInfo", estacionamentoModel.getHoraFechamento());
+        modelAndView.addObject("quantidadeVagasInfo", estacionamentoModel.getQuantidadeVagas());
+        modelAndView.addObject("precoInfo", estacionamentoModel.getValorHora());
+        modelAndView.addObject("vagasDisponiveis", estacionamentoModel.calcQtdeVagasLivres());
+        double taxaDeRetorno = estacionamentoModel.taxaDeRetorno(placaVeiculo);
+        System.out.println(taxaDeRetorno);
+     
+            modelAndView.addObject("placaVeiculoInfo", placaVeiculo);
+            modelAndView.addObject("taxaDeRetornoInfo", taxaDeRetorno);
+        
+        
+
+       return modelAndView;
+   }
+
 
     @GetMapping("/entradaVeiculo")
     public ModelAndView entradaForm(Model model) {

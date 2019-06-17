@@ -189,6 +189,24 @@ public class Estacionamento {
         return veiculos;
     }
 
+    public float taxaDeRetorno(String placa) {
+		 EstadaDAO estadaDAO = new EstadaDAO();
+	        Estada xv = new Estada();
+	        long quant = 0;
+	        
+	        List<Estada> result = estadaDAO.recuperaEstadasGeral();
+	        System.out.println(result);
+	       
+	        quant =result.stream()
+	                .filter(x -> x.getVeiculo().getPlaca().equals(placa)).count();
+	        
+//	                .mapToInt(y->y.getContadorDeVezes()).hashCode());
+//	                .mapToInt(y -> y.getContadorDeVezes()).findFirst().getAsInt());
+	                ;
+	        System.out.println(quant);
+	        return (quant*100)/30;
+
+   }
     public double permanenciaEstadasPorMes(EstadaDAO estadaDAO, int mesEscolhido) {
         List<Estada> estadas = estadaDAO.recuperaEstadasGeral();
         double media = estadas.stream().filter(t -> t.getDataEntrada().getMonth().equals(Month.of(mesEscolhido)))

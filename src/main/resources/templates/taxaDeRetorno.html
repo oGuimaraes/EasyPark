@@ -7,8 +7,8 @@
     <title>EasyPark</title>
     <meta name="description" content="Sistema de Estacionamento - EasyPark">
     <meta name="Author" contents="Otávio Guimarães, Daniel Lyncon">
-    <link href="https://fonts.googleapis.com/css?family=Montserrat&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=PT+Sans" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat&display=swap" rel="stylesheet">
     <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}" />
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
     <link rel="icon" href="../images/icon.png" />
@@ -29,10 +29,8 @@
             <div class="menu-contents">
                 <ul>
                     <li><a href="index" class="button">Inicio</a></li>
-                    <li><a href="cadastroEstabelecimento" class="button">Cadastrar
-							Estabelecimento</a></li>
-                    <li><a href="entradaVeiculo" class="button">Entrada de
-							Veículo</a></li>
+                    <li><a href="cadastroEstabelecimento" class="button">Cadastrar Estabelecimento</a></li>
+                    <li><a href="entradaVeiculo" class="button">Entrada de Veículo</a></li>
                     <li><a href="saidaVeiculo" class="button">Saída de Veículo</a></li>
                     <li><a href="#">Relatórios</a></li>
                 </ul>
@@ -44,8 +42,7 @@
             <ul id="nav">
                 <li><a href="index" class="button">Inicio</a></li>
                 <li><a id="setInfoEstacionamento" href="cadastroEstabelecimento" class="button">Alterar Estabelecimento</a></li>
-                <li><a href="entradaVeiculo" class="button">Entrada de
-						Veículo</a></li>
+                <li><a href="entradaVeiculo" class="button">Entrada de Veículo</a></li>
                 <li><a href="saidaVeiculo" class="button">Saída de Veículo</a></li>
                 <li><a href="#">Relatórios</a>
                     <ul>
@@ -56,31 +53,28 @@
                     </ul>
                 </li>
             </ul>
+            <div id="divInfo" class="info-estacionamento">
+                <span class="nomeEstabelecimento" id="nomeEstabelecimento" th:text="${nomeEstabelecimentoInfo}"></span>
+                <span class="destaque">Vagas disponiveis: <span class="destaque" name="vagasDisponiveis" th:text="${vagasDisponiveis}"></span> </span>
+                <span>Hora de Abertura: <span name="horaAberturaInfo" th:text="${horaAberturaInfo}">Hora Abertura</span></span>
+                <span>Hora de Fechamento: <span name="horaFechamentoInfo" th:text="${horaFechamentoInfo}"></span> </span>
+                <span>Vagas Totais: <span name="quantidadeVagasInfo" th:text="${quantidadeVagasInfo}"></span></span>
+                <span>Valor Hora: R$ <span name="precoInfo" th:text="${precoInfo}"></span></span>
+            </div>
         </div>
         <div class="blank-space"></div>
         <div class="aplicacao">
+            <form method="post" action="taxaDeRetorno">
+                <h2 class="titulo">Taxa de Retorno</h2>
 
-            <h2 class="titulo">Cadastro do estabelecimento efetuado com sucesso</h2>
-            <h3>
-                <span class="tituloAtributo">Nome: </span> <span class="infoAtributo" th:text="${nomeEstabelecimento}"></span>
-            </h3>
-            <h3>
-                <span class="tituloAtributo">Horário de Abertura: </span><span class="infoAtributo" th:text="${horaAbertura}"></span>
-            </h3>
+                <div class="group">
+                    <input class="input-text" type="text" name="placa" required> <span class="highlight"></span> <span class="bar"></span> <label>Placa do veículo</label>
+                </div>
 
-            <h3>
-                <span class="tituloAtributo">Horário Fechamento: </span> <span class="infoAtributo" th:text="${horaFechamento}"></span>
-            </h3>
-
-            <h3>
-                <span class="tituloAtributo">Quantidade de Vagas: </span><span class="infoAtributo" th:text="${quantidadeVagas}"></span>
-            </h3>
-
-            <h3>
-                <span class="tituloAtributo">Valor hora: </span><span class="infoAtributo" th:text="${valorHora}"></span>
-            </h3>
-        </div>
-    </div>
+                <button type="submit" class="btn-form" value="taxa">Buscar</button>
+            </form>
+			
+		
 </body>
 <script th:src="@{/javascript/main.js}"></script>
 <script src="https://code.jquery.com/jquery-3.4.1.slim.js" integrity="sha256-BTlTdQO9/fascB1drekrDVkaKd9PkwBymMlHOiG+qLI=" crossorigin="anonymous"></script>
@@ -92,6 +86,8 @@
         $(".menu-mobile").hide();
     })
 </script>
+</body>
 
+</html>
 
 </html>
